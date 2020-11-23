@@ -19,7 +19,7 @@ apt-get update
 apt-get -y upgrade
 
 # Install new packages, without unnecessary recommended packages
-apt-get -y install --no-install-recommends "${dev_packages[@]}"
+apt-get -y -t buster-backports install --no-install-recommends "${dev_packages[@]}"
 
 
 # Delete cached files we don't need anymore
