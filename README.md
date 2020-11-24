@@ -1,18 +1,15 @@
-# pi-top Debian packaging base Docker image
+# pi-top Docker image for building Debian packages such as the [Python SDK](https://github.com/pi-top/pi-top-Python-SDK)
 
-Instructions are taken from here:
-https://docs.docker.com/docker-for-mac/multi-arch/
+Instructions are taken from [here](https://docs.docker.com/docker-for-mac/multi-arch/).
 
+### How to build and push to Docker Hub
 ```sh
-DOCKER_USER="pitop"
-DOCKER_REPO="deb-build"
-DOCKER_LABEL="latest"
-
-# Set up builder
+# Set up builder (one time)
 docker buildx create --name mybuilder --use
 docker buildx inspect --bootstrap
 
-tag="${DOCKER_USER}/${DOCKER_REPO}:${DOCKER_LABEL}"
+# Define tag to use
+tag="pitop/deb-build:latest"
 
 # Build for multiple architectures and push to Registry
 docker buildx build \
@@ -20,6 +17,6 @@ docker buildx build \
   -t "${tag}" \
   --push .
 
-# Check that there are multiple architectures for the build
+# Check that there are multiple architectures for the build (optional)
 docker buildx imagetools inspect "${tag}"
 ```
