@@ -15,11 +15,12 @@ export DEBIAN_FRONTEND=noninteractive
 # Update the package listing, so we know what package exist
 apt-get update
 
+# Install security updates
+apt-get -y upgrade
+
 # Install new packages, without unnecessary recommended packages
 apt-get -y -t buster-backports install --no-install-recommends "${dev_packages[@]}"
 
-# Install security updates
-apt-get -y upgrade
 
 # Delete cached files we don't need anymore
 apt-get clean

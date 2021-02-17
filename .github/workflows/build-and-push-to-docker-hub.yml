@@ -22,6 +22,6 @@ jobs:
       - name: Build and push to Docker Hub
         run: |
           docker buildx build \
-            --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            --platform linux/amd64,linux/arm64,linux/armhf \
             -t pitop/deb-build:latest \
             --push .
