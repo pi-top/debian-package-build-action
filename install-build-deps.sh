@@ -7,7 +7,6 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-# repos=("pi-top-Python-SDK" "pitop.utils")
 repos=("pi-top-Python-SDK")
 
 # Tell apt-get we're never going to be able to give manual feedback

@@ -1,0 +1,28 @@
+name: Build Image and Push to Docker Hub
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build-push-docker-hub:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.2.0
+        with:
+          fetch-depth: 0
+          path: main
+
+      # Instructions are taken from here: https://docs.docker.com/docker-for-mac/multi-arch/
+      - name: Set up Docker
+        run: |
+          docker buildx create --name mybuilder --use
+          docker buildx inspect --bootstrap
+
+      - name: Build and push to Docker Hub
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            -t pitop/deb-build:latest \
+            --push .
