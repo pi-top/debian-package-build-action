@@ -19,9 +19,7 @@ apt-get update
 apt-get -y install wget
 
 # Add Raspberry Pi's repo
-echo "deb http://archive.raspberrypi.org/debian/ buster main
-# Uncomment line below then 'apt-get update' to enable 'apt-get source'
-# deb-src http://archive.raspberrypi.org/debian/ buster main" > /etc/apt/sources.list.d/raspi.list
+echo "deb http://archive.raspberrypi.org/debian/ buster main" > /etc/apt/sources.list.d/raspi.list
 
 wget -O - http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | apt-key add -
 
