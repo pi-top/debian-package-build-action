@@ -12,14 +12,20 @@ repos=("pi-top-Python-SDK")
 # Tell apt-get we're never going to be able to give manual feedback
 export DEBIAN_FRONTEND=noninteractive
 
+# Update the package listing, so we know what packages exist
+apt-get update
+
+# Install wget for getting APT key
+apt-get -y install wget
+
 # Add Raspberry Pi's repo
 echo "deb http://archive.raspberrypi.org/debian/ buster main
 # Uncomment line below then 'apt-get update' to enable 'apt-get source'
 # deb-src http://archive.raspberrypi.org/debian/ buster main" > /etc/apt/sources.list.d/raspi.list
 
-wget -O - http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | sudo apt-key add -
+wget -O - http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | apt-key add -
 
-# Update the package listing, so we know what packages exist
+# Update the package listing with newly added sources
 apt-get update
 
 # Install git for cloning repos
