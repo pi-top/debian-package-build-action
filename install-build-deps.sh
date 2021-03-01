@@ -7,7 +7,7 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-repos=("pi-top-Python-SDK")
+repos=("pi-top-Python-SDK", "pi-top-Python-Common-Library")
 
 # Tell apt-get we're never going to be able to give manual feedback
 export DEBIAN_FRONTEND=noninteractive
