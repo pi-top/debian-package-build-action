@@ -15,13 +15,13 @@ export DEBIAN_FRONTEND=noninteractive
 # Update the package listing, so we know what packages exist
 apt-get update
 
-# Install wget and gpg-agent for getting/installing APT key
-apt-get -y install wget gpg-agent
+# Install wget and gnupg2 for getting/installing APT key
+apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg2
+
+curl -fsSL http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | apt-key add -
 
 # Add Raspberry Pi's repo
 echo "deb http://archive.raspberrypi.org/debian/ buster main" > /etc/apt/sources.list.d/raspi.list
-
-wget -O - http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | apt-key add -
 
 # Update the package listing with newly added sources
 apt-get update
