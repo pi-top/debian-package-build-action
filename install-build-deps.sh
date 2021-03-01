@@ -15,14 +15,15 @@ export DEBIAN_FRONTEND=noninteractive
 # Update the package listing with newly added sources
 apt-get update
 
-# Install git for cloning repos
-apt-get -y install git
+# Install wget for getting control files for repos
+apt-get -y install wget
 
 # Install build dependencies
+mkdir debian
 for repo in "${repos[@]}"; do
-  git clone --depth 1 "https://github.com/pi-top/${repo}"
-  apt-get build-dep -y "./${repo}"
-  rm -rf "./${repo}"
+  wget "https://raw.githubusercontent.com/pi-top/${repo}/master/debian/control" -O debian/control
+  apt-get build-dep -y .
+  rm -rf debian/control
 done
 
 # Delete cached files we don't need anymore
