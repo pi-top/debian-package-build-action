@@ -15,8 +15,8 @@ export DEBIAN_FRONTEND=noninteractive
 # Update the package listing, so we know what packages exist
 apt-get update
 
-# Install wget and gnupg2 for getting/installing APT key
-apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg2
+# Install wget and gnupg for getting/installing APT key
+apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg
 
 curl -fsSL http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | apt-key add -
 
