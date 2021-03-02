@@ -7,7 +7,9 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
+# Can probably remove some of these:
 support_packages=("apt-transport-https" "ca-certificates" "curl" "software-properties-common" "gnupg")
+
 dev_packages=("dpkg-dev" "debhelper" "lintian")
 
 # Tell apt-get we're never going to be able to give manual feedback

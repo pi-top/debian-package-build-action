@@ -7,7 +7,7 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-repos=("pi-top-Python-SDK" "pi-top-Python-Common-Library")
+repos=("pi-top-Python-SDK" "pi-top-Python-Common-Library" "raspi2png")
 
 # Tell apt-get we're never going to be able to give manual feedback
 export DEBIAN_FRONTEND=noninteractive
@@ -19,12 +19,12 @@ apt-get update
 apt-get -y install wget
 
 # Install build dependencies
-mkdir debian
+mkdir ./debian
 for repo in "${repos[@]}"; do
-  wget "https://raw.githubusercontent.com/pi-top/${repo}/master/debian/control" -O debian/control
+  wget "https://raw.githubusercontent.com/pi-top/${repo}/master/debian/control" -O ./debian/control
   apt-get build-dep -y .
-  rm -rf debian/control
 done
+rm -rf ./debian
 
 # Delete cached files we don't need anymore
 apt-get clean
