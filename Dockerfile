@@ -27,7 +27,7 @@ COPY  install-build-deps.sh /.install-build-deps
 RUN /.install-build-deps
 
 # Add a user with userid 1000 and name nonroot
-RUN useradd -u 1000 nonroot
+RUN useradd --create-home -u 1000 nonroot
 
 # Configure sudo for nonroot
 COPY  sudoers.txt /etc/sudoers
