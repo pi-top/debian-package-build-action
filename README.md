@@ -17,8 +17,7 @@ The following snippet will use `amd64` for packages that do not require compilat
 Packages that require compilation will be built in a container that is emulating ARM hardware (32 and 64 bit), which results in a slower build.
 ```sh
 architectures=()
-if [[ "$(grep "Architecture" debian/control | grep -v "all")" ]]; then
-  # Requires hardware emulation
+if [[ "$(grep "Architecture" debian/control | grep -v "all")" != "" ]]; then
   docker run --privileged --rm docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
 
   architectures+=("armhf")

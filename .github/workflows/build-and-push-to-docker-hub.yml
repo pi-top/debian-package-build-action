@@ -28,16 +28,27 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Build (and push, if master)
+      - name: Build
         id: docker_build
+        if: github.ref == 'refs/heads/master'
         uses: docker/build-push-action@v2
         with:
           # AMD64 - build requires no compilation (architecture: all)
           # ARM   - build requires hardware emulated compilation
           platforms: linux/amd64,linux/arm64,linux/arm/v7
-          push: ${{ github.ref }} == "master"
+          push: false
+
+      - name: Build and push
+        id: docker_build_push
+        if: github.ref == 'refs/heads/master'
+        uses: docker/build-push-action@v2
+        with:
+          # AMD64 - build requires no compilation (architecture: all)
+          # ARM   - build requires hardware emulated compilation
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: true
           tags: pitop/deb-build:latest
 
       - name: Show image digest
-        if: ${{ github.ref }} == "master"
-        run: echo ${{ steps.docker_build.outputs.digest }}
+        if: github.ref == 'refs/heads/master'
+        run: echo ${{ steps.docker_build_push.outputs.digest }}
