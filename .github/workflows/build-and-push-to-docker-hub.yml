@@ -1,8 +1,7 @@
-name: Build Image and Push to Docker Hub
+name: Build Image, Push to Docker Hub (on master)
 
 on:
-  push:
-    branches: [ "master" ]
+  push
 
 jobs:
   build-push-docker-hub:
@@ -29,16 +28,16 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: List available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
-
-      - name: Build and push
+      - name: Build (and push, if master)
         id: docker_build
         uses: docker/build-push-action@v2
         with:
+          # AMD64 - build requires no compilation (architecture: all)
+          # ARM   - build requires hardware emulated compilation
           platforms: linux/amd64,linux/arm64,linux/arm/v7
-          push: true
+          push: ${{ github.ref }} == "master"
           tags: pitop/deb-build:latest
 
       - name: Show image digest
+        if: ${{ github.ref }} == "master"
         run: echo ${{ steps.docker_build.outputs.digest }}
