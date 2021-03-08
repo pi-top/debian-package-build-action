@@ -7,14 +7,21 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-# Change working directory to source
+echo "[build-deb] Changing working directory to source... (/src)"
 cd /src
 
-# Update package list
+echo "[build-deb] Listing directory contents..."
+ls -l
+
+echo "[build-deb] Updating package list..."
 apt-get update
 
-# Install build dependencies
-apt-get build-dep -y .
+echo "[build-deb] Installing build dependencies..."
+apt-get build-dep -y /src
 
-# Build package - no GPG signing, skip checking build dependencies (can fail erroneously)
+echo "[build-deb] Building package..."
+# No GPG signing
+# Skip checking build dependencies (can fail erroneously)
 dpkg-buildpackage --no-sign --no-check-builddeps
+
+echo "[build-deb] DONE!"
