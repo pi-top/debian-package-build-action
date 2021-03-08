@@ -16,20 +16,23 @@ sudo service docker restart
 The following snippet will use `amd64` for packages that do not require compilation, which will result in the fastest package building.
 Packages that require compilation will be built in a container that is emulating ARM hardware (32 and 64 bit), which results in a slower build.
 ```sh
-architectures=()
+platforms=()
 if [[ "$(grep "Architecture" debian/control | grep -v "all")" != "" ]]; then
   docker run --privileged --rm docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
 
-  architectures+=("armhf")
-  architectures+=("arm64")
+  platforms+=("linux/arm/v7")
+  platforms+=("linux/arm64")
 else
-  architectures+=("amd64")
+  platforms+=("linux/amd64")
 fi
 
-for architecture in ${architectures[@]}; do
+# Source files are in current directory
+# Build files will be in /tmp
+for platform in ${platforms[@]}; do
   docker run --rm \
-      --platform=${architecture} \
+      --platform=${platform} \
       --volume $(pwd):/src \
+      --volume /tmp:/build \
       pitop/deb-build:latest
 done
 ```
