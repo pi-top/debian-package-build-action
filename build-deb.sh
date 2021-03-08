@@ -19,7 +19,7 @@ apt-get update
 echo "[build-deb] Installing build dependencies..."
 apt-get build-dep -y .
 
-echo "[build-deb] Moving source files..."
+echo "[build-deb] Moving source files to temporary directory..."
 tmp_dir_root=$(mktemp -d)
 tmp_dir=$(mkdir ${tmp_dir}/src)
 cp -r /src/* "${tmp_dir}/"
@@ -28,7 +28,7 @@ cd "${tmp_dir}"
 echo "[build-deb] Building package..."
 # No GPG signing
 # Skip checking build dependencies (can fail erroneously)
-dpkg-buildpackage --no-sign --no-check-builddeps
+dpkg-buildpackage --no-sign --no-check-builddeps --post-clean
 
 echo "[build-deb] Moving build files..."
 for x in "${tmp_dir_root}/"*; do
