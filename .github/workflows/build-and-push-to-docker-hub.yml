@@ -48,8 +48,7 @@ jobs:
         with:
           # AMD64 - build requires no compilation (architecture: all)
           # ARM   - build requires hardware emulated compilation
-          # platforms: linux/amd64,linux/arm64,linux/arm/v7
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
           tags: pitop/deb-build:latest
 
