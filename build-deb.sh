@@ -21,7 +21,7 @@ apt-get build-dep -y .
 
 echo "[build-deb] Moving source files to temporary directory..."
 tmp_dir_root=$(mktemp -d)
-tmp_dir=$(mkdir ${tmp_dir}/src)
+tmp_dir=$(mkdir ${tmp_dir_root}/src)
 cp -r /src/* "${tmp_dir}/"
 
 cd "${tmp_dir}"
