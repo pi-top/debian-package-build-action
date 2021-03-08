@@ -1,7 +1,10 @@
 name: Build Image, Push to Docker Hub (on master)
 
 on:
-  push
+  push:
+  schedule:
+    # Run daily at midnight
+    - cron:  '0 0 * * *'
 
 jobs:
   build-push-docker-hub:
