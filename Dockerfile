@@ -2,6 +2,8 @@ FROM debian:buster-backports
 
 # Root of source code to build
 VOLUME /src
+# Location of output package build
+VOLUME /build
 
 # Default script
 COPY build-deb.sh /build-deb
