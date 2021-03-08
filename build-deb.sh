@@ -10,7 +10,8 @@ IFS=$'\n\t'
 tmp_dir_root=$(mktemp -d)
 
 echo "[build-deb] Copying source files to temporary directory (${tmp_dir_root})..."
-tmp_dir=$(mkdir ${tmp_dir_root}/src)
+tmp_dir="${tmp_dir_root}/src"
+mkdir "${tmp_dir}"
 cp -r /src/* "${tmp_dir}/"
 
 echo "[build-deb] Changing working directory to temporary directory..."
