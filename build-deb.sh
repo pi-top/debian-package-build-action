@@ -22,7 +22,7 @@ apt-get build-dep -y .
 echo "[build-deb] Moving source files..."
 rm -rf /src/tmp || true
 mkdir -p /src/tmp
-mv * /src/tmp
+mv * /src/tmp || true
 cd /src/tmp
 
 echo "[build-deb] Building package..."
