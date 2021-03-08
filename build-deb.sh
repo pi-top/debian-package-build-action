@@ -29,10 +29,22 @@ ls -l
 echo "[build-deb] Building package..."
 # No GPG signing
 # Skip checking build dependencies (can fail erroneously)
-dpkg-buildpackage --no-sign --no-check-builddeps --post-clean
+dpkg-buildpackage \
+  --no-sign \
+  --no-check-builddeps \
+  --post-clean
 
 echo "[build-deb] DEBUG: Listing temporary directory contents AFTER building..."
 ls -l
+
+echo "[build-deb] Running Lintian..."
+lintian \
+  --dont-check-part nmu \
+  --no-tag-display-limit \
+  --display-info \
+  --show-overrides \
+  --fail-on error \
+  --fail-on warning
 
 echo "[build-deb] Moving build files to /build..."
 for x in "${tmp_dir_root}/"*; do
