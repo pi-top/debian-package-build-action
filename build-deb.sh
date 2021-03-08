@@ -17,24 +17,27 @@ cp -r /src/* "${tmp_dir}/"
 echo "[build-deb] Changing working directory to temporary directory..."
 cd "${tmp_dir}"
 
-echo "[build-deb] DEBUG: Listing temporary directory contents..."
-ls -l
-
 echo "[build-deb] Updating package list..."
 sudo apt-get update
 
 echo "[build-deb] Installing build dependencies..."
 sudo apt-get build-dep -y .
 
+echo "[build-deb] DEBUG: Listing temporary directory contents BEFORE building..."
+ls -l
+
 echo "[build-deb] Building package..."
 # No GPG signing
 # Skip checking build dependencies (can fail erroneously)
 dpkg-buildpackage --no-sign --no-check-builddeps --post-clean
 
+echo "[build-deb] DEBUG: Listing temporary directory contents AFTER building..."
+ls -l
+
 echo "[build-deb] Moving build files to /build..."
 for x in "${tmp_dir_root}/"*; do
    if ! [ -d "$x" ]; then
-     mv -- "$x" /build
+     sudo mv -- "$x" /build
    fi
 done
 
