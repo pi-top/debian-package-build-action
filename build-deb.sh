@@ -17,7 +17,7 @@ echo "[build-deb] Updating package list..."
 apt-get update
 
 echo "[build-deb] Installing build dependencies..."
-apt-get build-dep -y ./debian/control
+apt-get build-dep -y .
 
 echo "[build-deb] Building package..."
 # No GPG signing
