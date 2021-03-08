@@ -20,26 +20,21 @@ echo "[build-deb] Installing build dependencies..."
 apt-get build-dep -y .
 
 echo "[build-deb] Moving source files..."
-rm -rf /src/tmp || true
-mkdir -p /src/tmp
-mv * /src/tmp || true
-cd /src/tmp
+tmp_dir_root=$(mktemp -d)
+tmp_dir=$(mkdir ${tmp_dir}/src)
+cp -r /src/* "${tmp_dir}/"
 
+cd "${tmp_dir}"
 echo "[build-deb] Building package..."
 # No GPG signing
 # Skip checking build dependencies (can fail erroneously)
 dpkg-buildpackage --no-sign --no-check-builddeps
 
-
 echo "[build-deb] Moving build files..."
-for x in /src/*; do
+for x in "${tmp_dir_root}/"*; do
    if ! [ -d "$x" ]; then
      mv -- "$x" /build
    fi
 done
-
-echo "[build-deb] Moving source files back..."
-mv /src/tmp/* /src/
-rm -rf /src/tmp
 
 echo "[build-deb] DONE!"
