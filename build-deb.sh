@@ -7,8 +7,9 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-echo "[build-deb] Copying source files to temporary directory (${tmp_dir_root})..."
 tmp_dir_root=$(mktemp -d)
+
+echo "[build-deb] Copying source files to temporary directory (${tmp_dir_root})..."
 tmp_dir=$(mkdir ${tmp_dir_root}/src)
 cp -r /src/* "${tmp_dir}/"
 
