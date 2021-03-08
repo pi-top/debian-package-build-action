@@ -19,10 +19,10 @@ echo "[build-deb] DEBUG: Listing temporary directory contents..."
 ls -l
 
 echo "[build-deb] Updating package list..."
-apt-get update
+sudo apt-get update
 
 echo "[build-deb] Installing build dependencies..."
-apt-get build-dep -y .
+sudo apt-get build-dep -y .
 
 echo "[build-deb] Building package..."
 # No GPG signing
