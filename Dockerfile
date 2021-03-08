@@ -16,7 +16,7 @@ ENV DPKG_COLORS=always
 ENV FORCE_UNSAFE_CONFIGURE=1
 
 # Add a user with userid 1000 and name nonroot
-RUN useradd −u 1000 nonroot
+RUN useradd -u 1000 nonroot
 
 # Run container as nonroot
 USER nonroot
