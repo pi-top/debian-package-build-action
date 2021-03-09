@@ -1,6 +1,7 @@
 name: Build Image, Push to Docker Hub (on master)
 
 on:
+  # Run on any commit
   push:
   schedule:
     # Run daily at midnight
