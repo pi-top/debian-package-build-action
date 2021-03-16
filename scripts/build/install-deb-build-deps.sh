@@ -9,7 +9,7 @@ IFS=$'\n\t'
 
 
 [[ "${DEBUG}" -eq 1 ]] && echo "[install-build-dep] Updating package list..."
-sudo apt-get update
+[[ "${DEBUG}" -eq 1 ]] && sudo apt-get update
 
 [[ "${DEBUG}" -eq 1 ]] && echo "[install-build-dep] Installing build dependencies..."
 sudo apt-get build-dep -y .
