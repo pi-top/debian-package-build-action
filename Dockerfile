@@ -27,7 +27,9 @@ ENV DPKG_BUILDPACKAGE_LOG_FILE="/dev/null"
 ENV LINTIAN_LOG_FILE="/dev/null"
 # No GPG signing
 # Skip checking build dependencies (can fail erroneously)
+# Manpage: https://manpages.debian.org/buster/dpkg-dev/dpkg-buildpackage.1.en.html
 ENV DPKG_BUILDPACKAGE_OPTS="--no-sign --no-check-builddeps --post-clean"
+# Manpage: https://manpages.debian.org/buster-backports/lintian/lintian.1.en.html
 ENV LINTIAN_OPTS="--dont-check-part nmu --no-tag-display-limit --display-info --show-overrides --fail-on error --fail-on warning"
 
 # ~ Debian
