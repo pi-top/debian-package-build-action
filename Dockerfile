@@ -6,10 +6,21 @@ VOLUME /src
 VOLUME /build
 
 # Default script
+COPY entrypoint.sh /entrypoint
 COPY build-deb.sh /build-deb
-ENTRYPOINT ["/build-deb"]
+COPY check-deb.sh /check-deb
+ENTRYPOINT ["/entrypoint"]
 
 # Environment variables
+# ~ Custom logic
+ENV BUILD=1
+ENV CHECK=1
+# No GPG signing
+# Skip checking build dependencies (can fail erroneously)
+ENV DPKG_BUILDPACKAGE_OPTS="--no-sign --no-check-builddeps --post-clean"
+ENV LINTIAN_OPTS="--dont-check-part nmu --no-tag-display-limit --display-info --show-overrides --fail-on error --fail-on warning"
+
+# ~ Debian
 ENV DH_VERBOSE=1
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DPKG_COLORS=always
