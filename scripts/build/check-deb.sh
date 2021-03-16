@@ -23,7 +23,7 @@ IFS=' ' read -ra LINTIAN_OPTS_ARR <<< "$LINTIAN_OPTS"
 
 debug_echo "[check-deb] Checking for .changes file..."
 changes_file="$(find . -name "*.changes" | head -n1)"
-if [[ -f "${changes_file}" ]]; then
+if [[ ! -f "${changes_file}" ]]; then
  echo "[check-deb] ERROR: No .changes file found."
  exit 1
 fi
