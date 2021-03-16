@@ -46,6 +46,8 @@ done
 The following environment variables can be overriden to change the behaviour:
 
 ```sh
+DEBUG=0
+INSTALL_BUILD_DEPS=1
 BUILD=1
 CHECK=1
 DPKG_BUILDPACKAGE_OPTS="--no-sign --no-check-builddeps --post-clean"
