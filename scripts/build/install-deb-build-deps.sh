@@ -7,13 +7,9 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-echo "[check-deb] Changing working directory to /build..."
-cd /build
 
-echo "[check-deb] DEBUG: print LINTIAN_OPTS..."
-echo "${LINTIAN_OPTS}"
+[[ "${DEBUG}" -eq 1 ]] && echo "[install-build-dep] Updating package list..."
+sudo apt-get update
 
-echo "[check-deb] Running Lintian..."
-lintian ${LINTIAN_OPTS}
-
-echo "[check-deb] DONE!"
+[[ "${DEBUG}" -eq 1 ]] && echo "[install-build-dep] Installing build dependencies..."
+sudo apt-get build-dep -y .

@@ -8,19 +8,13 @@ IFS=$'\n\t'
 ###############################################################
 
 
-if [[ "${BUILD}" -eq 1 ]]; then
-    echo "[Entrypoint] 'BUILD' set to 1 - building..."
-    /build-deb
-else
-    echo "[Entrypoint] 'BUILD' is not set to 1 - skipping build..."
-fi
+[[ "${DEBUG}" -eq 1 ]] && echo "[check-deb] Changing working directory to /build..."
+cd /build
 
-# ----
+[[ "${DEBUG}" -eq 1 ]] && echo "[check-deb] DEBUG: print LINTIAN_OPTS..."
+[[ "${DEBUG}" -eq 1 ]] && echo "${LINTIAN_OPTS}"
 
-if [[ "${CHECK}" -eq 1 ]]; then
-    echo "[Entrypoint] 'CHECK' set to 1 - checking..."
-    /check-deb
-else
-    echo "[Entrypoint] 'CHECK' is not set to 1 - skipping check..."
-fi
+[[ "${DEBUG}" -eq 1 ]] && echo "[check-deb] Running Lintian..."
+lintian ${LINTIAN_OPTS}
 
+[[ "${DEBUG}" -eq 1 ]] && echo "[check-deb] DONE!"
