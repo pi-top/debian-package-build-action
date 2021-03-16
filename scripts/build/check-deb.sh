@@ -8,13 +8,17 @@ IFS=$'\n\t'
 ###############################################################
 
 
-[[ "${DEBUG}" -eq 1 ]] && echo "[check-deb] Changing working directory to /build..."
+debug_echo() {
+  [[ "${DEBUG}" -eq 1 ]] && echo "$1"
+}
+
+debug_echo "[check-deb] Changing working directory to /build..."
 cd /build
 
-[[ "${DEBUG}" -eq 1 ]] && echo "[check-deb] DEBUG: print LINTIAN_OPTS..."
-[[ "${DEBUG}" -eq 1 ]] && echo "${LINTIAN_OPTS}"
+debug_echo "[check-deb] DEBUG: print LINTIAN_OPTS..."
+debug_echo "${LINTIAN_OPTS}"
 
-[[ "${DEBUG}" -eq 1 ]] && echo "[check-deb] Running Lintian..."
+debug_echo "[check-deb] Running Lintian..."
 lintian ${LINTIAN_OPTS}
 
-[[ "${DEBUG}" -eq 1 ]] && echo "[check-deb] DONE!"
+debug_echo "[check-deb] DONE!"

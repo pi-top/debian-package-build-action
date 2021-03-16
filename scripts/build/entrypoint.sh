@@ -8,28 +8,32 @@ IFS=$'\n\t'
 ###############################################################
 
 
+debug_echo() {
+  [[ "${DEBUG}" -eq 1 ]] && echo "$1"
+}
+
 if [[ "${INSTALL_BUILD_DEPS}" -eq 1 ]]; then
-    [[ "${DEBUG}" -eq 1 ]] && echo "[Entrypoint] 'INSTALL_BUILD_DEPS' set to 1 - installing build dependencies..."
+    debug_echo "[Entrypoint] 'INSTALL_BUILD_DEPS' set to 1 - installing build dependencies..."
     /install-deb-build-deps
 else
-    [[ "${DEBUG}" -eq 1 ]] && echo "[Entrypoint] 'INSTALL_BUILD_DEPS' is not set to 1 - skipping build..."
+    debug_echo "[Entrypoint] 'INSTALL_BUILD_DEPS' is not set to 1 - skipping build..."
 fi
 
 # ----
 
 if [[ "${BUILD}" -eq 1 ]]; then
-    [[ "${DEBUG}" -eq 1 ]] && echo "[Entrypoint] 'BUILD' set to 1 - building..."
+    debug_echo "[Entrypoint] 'BUILD' set to 1 - building..."
     /build-deb
 else
-    [[ "${DEBUG}" -eq 1 ]] && echo "[Entrypoint] 'BUILD' is not set to 1 - skipping build..."
+    debug_echo "[Entrypoint] 'BUILD' is not set to 1 - skipping build..."
 fi
 
 # ----
 
 if [[ "${CHECK}" -eq 1 ]]; then
-    [[ "${DEBUG}" -eq 1 ]] && echo "[Entrypoint] 'CHECK' set to 1 - checking..."
+    debug_echo "[Entrypoint] 'CHECK' set to 1 - checking..."
     /check-deb
 else
-    [[ "${DEBUG}" -eq 1 ]] && echo "[Entrypoint] 'CHECK' is not set to 1 - skipping check..."
+    debug_echo "[Entrypoint] 'CHECK' is not set to 1 - skipping check..."
 fi
 
