@@ -16,7 +16,7 @@ ENTRYPOINT ["/entrypoint"]
 # Environment variables #
 #########################
 # Add extra printing
-ENV DEBUG=0
+ENV DEBUG=1
 # Disable build stages by overriding these environment variables to 0
 ENV INSTALL_BUILD_DEPS=1
 ENV BUILD=1
