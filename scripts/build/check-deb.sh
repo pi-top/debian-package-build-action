@@ -9,7 +9,9 @@ IFS=$'\n\t'
 
 
 debug_echo() {
-  [[ "${DEBUG}" -eq 1 ]] && echo "$1"
+  if [[ "${DEBUG}" -eq 1 ]]; then
+    echo "$1"
+  fi
 }
 
 debug_echo "[check-deb] Changing working directory to /build..."

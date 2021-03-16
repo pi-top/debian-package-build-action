@@ -9,7 +9,9 @@ IFS=$'\n\t'
 
 
 debug_echo() {
-  [[ "${DEBUG}" -eq 1 ]] && echo "$1"
+  if [[ "${DEBUG}" -eq 1 ]]; then
+    echo "$1"
+  fi
 }
 
 if [[ "${INSTALL_BUILD_DEPS}" -eq 1 ]]; then
