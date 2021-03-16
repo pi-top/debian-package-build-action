@@ -30,11 +30,28 @@ fi
 # Build files will be in /tmp
 for platform in ${platforms[@]}; do
   docker run --rm \
-      --platform=${platform} \
-      --volume $(pwd):/src \
-      --volume /tmp:/build \
-      pitop/deb-build:latest
+    --platform=${platform} \
+    --volume $(pwd):/src \
+    --volume /tmp:/build \
+#    -e BUILD=1 \
+#    -e CHECK=1 \
+#    -e DPKG_BUILDPACKAGE_OPTS="--no-sign --no-check-builddeps --post-clean" \
+#    -e LINTIAN_OPTS="--dont-check-part nmu --no-tag-display-limit --display-info --show-overrides --fail-on error --fail-on warning" \
+    pitop/deb-build:latest
 done
+```
+
+### Environment Variables
+
+The following environment variables can be overriden to change the behaviour:
+
+```sh
+DEBUG=0
+INSTALL_BUILD_DEPS=1
+BUILD=1
+CHECK=1
+DPKG_BUILDPACKAGE_OPTS="--no-sign --no-check-builddeps --post-clean"
+LINTIAN_OPTS="--dont-check-part nmu --no-tag-display-limit --display-info --show-overrides --fail-on error --fail-on warning"
 ```
 
 ## Featured Repositories

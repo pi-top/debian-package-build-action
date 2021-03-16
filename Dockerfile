@@ -5,19 +5,31 @@ VOLUME /src
 # Location of output package build
 VOLUME /build
 
-# Default script
-COPY entrypoint.sh /entrypoint
-COPY build-deb.sh /build-deb
-COPY check-deb.sh /check-deb
+# Copy build scripts
+COPY scripts/build/install-deb-build-deps.sh /install-deb-build-deps
+COPY scripts/build/build-deb.sh /build-deb
+COPY scripts/build/check-deb.sh /check-deb
+COPY scripts/build/entrypoint.sh /entrypoint
 ENTRYPOINT ["/entrypoint"]
 
-# Environment variables
-# ~ Custom logic
+#########################
+# Environment variables #
+#########################
+# Add extra printing
+ENV DEBUG=1
+# Disable build stages by overriding these environment variables to 0
+ENV INSTALL_BUILD_DEPS=1
 ENV BUILD=1
 ENV CHECK=1
+# Optional:
+ENV BUILD_DEP_INSTALL_LOG_FILE="/dev/null"
+ENV DPKG_BUILDPACKAGE_LOG_FILE="/dev/null"
+ENV LINTIAN_LOG_FILE="/dev/null"
 # No GPG signing
 # Skip checking build dependencies (can fail erroneously)
+# Manpage: https://manpages.debian.org/buster/dpkg-dev/dpkg-buildpackage.1.en.html
 ENV DPKG_BUILDPACKAGE_OPTS="--no-sign --no-check-builddeps --post-clean"
+# Manpage: https://manpages.debian.org/buster-backports/lintian/lintian.1.en.html
 ENV LINTIAN_OPTS="--dont-check-part nmu --no-tag-display-limit --display-info --show-overrides --fail-on error --fail-on warning"
 
 # ~ Debian
@@ -26,16 +38,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV DPKG_COLORS=always
 ENV FORCE_UNSAFE_CONFIGURE=1
 
-# Install packages via script, to minimise size:
-# https://pythonspeed.com/articles/system-packages-docker/
-
 # Install dev packages
-COPY  install-dev-packages.sh /.install-dev-packages
+COPY  scripts/setup/install-dev-packages.sh /.install-dev-packages
 RUN /.install-dev-packages
 
 # Install build dependency packages
-COPY  install-build-deps.sh /.install-build-deps
-RUN /.install-build-deps
+COPY  scripts/setup/install-deb-build-deps.sh /.install-deb-build-deps
+RUN /.install-deb-build-deps
 
 # Add a user with userid 1000 and name nonroot
 RUN useradd --create-home -u 1000 nonroot
