@@ -22,6 +22,8 @@ ENV INSTALL_BUILD_DEPS=1
 ENV BUILD=1
 ENV CHECK=1
 # Optional:
+ENV BUILD_DEP_INSTALL_LOG_FILE
+ENV DPKG_BUILDPACKAGE_LOG_FILE
 ENV LINTIAN_LOG_FILE
 # No GPG signing
 # Skip checking build dependencies (can fail erroneously)
