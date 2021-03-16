@@ -22,9 +22,9 @@ ENV INSTALL_BUILD_DEPS=1
 ENV BUILD=1
 ENV CHECK=1
 # Optional:
-ENV BUILD_DEP_INSTALL_LOG_FILE
-ENV DPKG_BUILDPACKAGE_LOG_FILE
-ENV LINTIAN_LOG_FILE
+ENV BUILD_DEP_INSTALL_LOG_FILE="/dev/null"
+ENV DPKG_BUILDPACKAGE_LOG_FILE="/dev/null"
+ENV LINTIAN_LOG_FILE="/dev/null"
 # No GPG signing
 # Skip checking build dependencies (can fail erroneously)
 ENV DPKG_BUILDPACKAGE_OPTS="--no-sign --no-check-builddeps --post-clean"

@@ -29,7 +29,7 @@ debug_echo "[build-deb] DEBUG: print DPKG_BUILDPACKAGE_OPTS..."
 debug_echo "${DPKG_BUILDPACKAGE_OPTS}"
 
 debug_echo "[build-deb] Building package..."
-dpkg-buildpackage ${DPKG_BUILDPACKAGE_OPTS} | tee "${DPKG_BUILDPACKAGE_LOG_FILE:-/dev/null}"
+dpkg-buildpackage ${DPKG_BUILDPACKAGE_OPTS} | tee "${DPKG_BUILDPACKAGE_LOG_FILE}"
 
 debug_echo "[build-deb] DEBUG: Listing temporary directory contents AFTER building..."
 [[ "${DEBUG}" -eq 1 ]] && ls -l

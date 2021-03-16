@@ -19,6 +19,6 @@ debug_echo "[check-deb] DEBUG: print LINTIAN_OPTS..."
 debug_echo "${LINTIAN_OPTS}"
 
 debug_echo "[check-deb] Running Lintian..."
-lintian ${LINTIAN_OPTS} | tee "${LINTIAN_LOG_FILE:-/dev/null}"
+lintian ${LINTIAN_OPTS} | tee "${LINTIAN_LOG_FILE}"
 
 debug_echo "[check-deb] DONE!"
