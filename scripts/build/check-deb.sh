@@ -19,6 +19,11 @@ debug_echo "[check-deb] DEBUG: print LINTIAN_OPTS..."
 debug_echo "${LINTIAN_OPTS}"
 
 debug_echo "[check-deb] Running Lintian..."
-lintian ${LINTIAN_OPTS} | tee "${LINTIAN_LOG_FILE}"
+IFS=' ' read -ra LINTIAN_OPTS_ARR <<< "$LINTIAN_OPTS"
+lintian "${LINTIAN_OPTS_ARR[@]}" | tee "${LINTIAN_LOG_FILE}"
+
+if [[ "${DEBUG}" -eq 1 ]]; then
+  lintian-info "${LINTIAN_LOG_FILE}"
+fi
 
 debug_echo "[check-deb] DONE!"

@@ -24,7 +24,7 @@ ENV CHECK=1
 # Optional:
 ENV BUILD_DEP_INSTALL_LOG_FILE="/dev/null"
 ENV DPKG_BUILDPACKAGE_LOG_FILE="/dev/null"
-ENV LINTIAN_LOG_FILE="/dev/null"
+ENV LINTIAN_LOG_FILE="/tmp/lintian.log"
 # No GPG signing
 # Skip checking build dependencies (can fail erroneously)
 # Manpage: https://manpages.debian.org/buster/dpkg-dev/dpkg-buildpackage.1.en.html
