@@ -25,7 +25,9 @@ debug_echo "[build-deb] Changing working directory to temporary directory..."
 cd "${tmp_dir}"
 
 debug_echo "[build-deb] DEBUG: Listing temporary directory contents BEFORE building..."
-[[ "${DEBUG}" -eq 1 ]] && ls -l
+if [[ "${DEBUG}" -eq 1 ]]; then
+  ls -l
+fi
 
 debug_echo "[build-deb] DEBUG: print DPKG_BUILDPACKAGE_OPTS..."
 debug_echo "${DPKG_BUILDPACKAGE_OPTS}"
@@ -34,7 +36,9 @@ debug_echo "[build-deb] Building package..."
 dpkg-buildpackage ${DPKG_BUILDPACKAGE_OPTS} | tee "${DPKG_BUILDPACKAGE_LOG_FILE}"
 
 debug_echo "[build-deb] DEBUG: Listing temporary directory contents AFTER building..."
-[[ "${DEBUG}" -eq 1 ]] && ls -l
+if [[ "${DEBUG}" -eq 1 ]]; then
+  ls -l
+fi
 
 debug_echo "[build-deb] Moving build files to /build..."
 for x in "${tmp_dir_root}/"*; do
@@ -44,6 +48,8 @@ for x in "${tmp_dir_root}/"*; do
 done
 
 debug_echo "[build-deb] DEBUG: Listing /build directory contents..."
-[[ "${DEBUG}" -eq 1 ]] && ls -l /build
+if [[ "${DEBUG}" -eq 1 ]]; then
+  ls -l /build
+fi
 
 debug_echo "[build-deb] DONE!"
