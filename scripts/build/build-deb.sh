@@ -32,8 +32,11 @@ fi
 debug_echo "[build-deb] DEBUG: print DPKG_BUILDPACKAGE_OPTS..."
 debug_echo "${DPKG_BUILDPACKAGE_OPTS}"
 
+debug_echo "[check-deb] Parsing dpkg-buildpackage arguments..."
+IFS=' ' read -ra DPKG_BUILDPACKAGE_OPTS_ARR <<< "$DPKG_BUILDPACKAGE_OPTS"
+
 debug_echo "[build-deb] Building package..."
-dpkg-buildpackage ${DPKG_BUILDPACKAGE_OPTS} | tee "${DPKG_BUILDPACKAGE_LOG_FILE}"
+dpkg-buildpackage "${DPKG_BUILDPACKAGE_OPTS_ARR[@]}" | tee "${DPKG_BUILDPACKAGE_LOG_FILE}"
 
 debug_echo "[build-deb] DEBUG: Listing temporary directory contents AFTER building..."
 if [[ "${DEBUG}" -eq 1 ]]; then
