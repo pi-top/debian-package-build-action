@@ -23,7 +23,7 @@ apt-get -y -t buster-backports install --no-install-recommends "${support_packag
 
 echo "Adding Raspberry Pi's repo..."
 curl -fsSL http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | apt-key add -
-echo "deb http://archive.raspberrypi.org/debian/ buster main" > /etc/apt/sources.list.d/raspi.list
+echo "deb [arch=armhf,amd64,arm64] http://archive.raspberrypi.org/debian/ buster main" > /etc/apt/sources.list.d/raspi.list
 
 echo "Adding pi-top's repo..."
 curl --insecure https://apt.pi-top.com/pt-apt.asc | apt-key add
