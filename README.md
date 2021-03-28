@@ -50,12 +50,32 @@ done
 The following environment variables can be overriden to change the behaviour:
 
 ```sh
+# Stages - boolean
 DEBUG=0
 INSTALL_BUILD_DEPS=1
 BUILD=1
 CHECK=1
-DPKG_BUILDPACKAGE_OPTS="--no-sign --no-check-builddeps --post-clean"
-LINTIAN_OPTS="--dont-check-part nmu --no-tag-display-limit --display-info --show-overrides --fail-on error --fail-on warning"
+# Build configuration
+DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=0
+DPKG_BUILDPACKAGE_POST_CLEAN=0
+# Quality check configuration - comma-separated lists
+LINTIAN_DONT_CHECK_PARTS="nmu"
+LINTIAN_TAGS_TO_SUPPRESS=""
+# Quality check configuration - boolean
+LINTIAN_DISPLAY_INFO=1
+LINTIAN_SHOW_OVERRIDES=1
+LINTIAN_TAG_DISPLAY_LIMIT=0
+# LINTIAN_NO_FAIL overrides all others
+LINTIAN_FAIL_ON_ERROR=1
+LINTIAN_FAIL_ON_WARNING=1
+LINTIAN_FAIL_ON_INFO=0
+LINTIAN_FAIL_ON_PEDANTIC=0
+LINTIAN_FAIL_ON_EXPERIMENTAL=0
+LINTIAN_FAIL_ON_OVERRIDE=0
+LINTIAN_NO_FAIL=0
+# Additional options
+DPKG_BUILDPACKAGE_OPTS=""
+LINTIAN_OPTS=""
 ```
 
 ## Featured Repositories
