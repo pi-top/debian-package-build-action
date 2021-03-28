@@ -17,20 +17,43 @@ ENTRYPOINT ["/entrypoint"]
 #########################
 # Add extra printing
 ENV DEBUG=1
+
 # Disable build stages by overriding these environment variables to 0
 ENV INSTALL_BUILD_DEPS=1
 ENV BUILD=1
 ENV CHECK=1
-# Optional:
+
+# Optional log files
 ENV BUILD_DEP_INSTALL_LOG_FILE="/dev/null"
 ENV DPKG_BUILDPACKAGE_LOG_FILE="/dev/null"
 ENV LINTIAN_LOG_FILE="/tmp/lintian.log"
-# No GPG signing
-# Skip checking build dependencies (can fail erroneously)
+
+# dpkg-buildpackage configuration
+ENV DPKG_BUILDPACKAGE_GPG_SIGN=0
+ENV DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=0
+ENV DPKG_BUILDPACKAGE_POST_CLEAN=1
 # Manpage: https://manpages.debian.org/buster/dpkg-dev/dpkg-buildpackage.1.en.html
-ENV DPKG_BUILDPACKAGE_OPTS="--no-sign --no-check-builddeps --post-clean"
+# Space-separated arguments
+ENV DPKG_BUILDPACKAGE_OPTS=""
+
+# lintian configuration
+# Comma-separated
+ENV LINTIAN_DONT_CHECK_PARTS="nmu"
+ENV LINTIAN_TAGS_TO_SUPPRESS=""
+# Boolean
+ENV LINTIAN_DISPLAY_INFO=1
+ENV LINTIAN_SHOW_OVERRIDES=1
+ENV LINTIAN_TAG_DISPLAY_LIMIT=0
+ENV LINTIAN_FAIL_ON_ERROR=1
+ENV LINTIAN_FAIL_ON_WARNING=1
+ENV LINTIAN_FAIL_ON_INFO=0
+ENV LINTIAN_FAIL_ON_PEDANTIC=0
+ENV LINTIAN_FAIL_ON_EXPERIMENTAL=0
+ENV LINTIAN_FAIL_ON_OVERRIDE=0
+ENV LINTIAN_NO_FAIL=0
 # Manpage: https://manpages.debian.org/buster-backports/lintian/lintian.1.en.html
-ENV LINTIAN_OPTS="--dont-check-part nmu --no-tag-display-limit --display-info --show-overrides --fail-on error --fail-on warning"
+# Space-separated
+ENV LINTIAN_OPTS=""
 
 # ~ Debian
 ENV DH_VERBOSE=1

@@ -35,8 +35,12 @@ for platform in ${platforms[@]}; do
     --volume /tmp:/build \
 #    -e BUILD=1 \
 #    -e CHECK=1 \
-#    -e DPKG_BUILDPACKAGE_OPTS="--no-sign --no-check-builddeps --post-clean" \
-#    -e LINTIAN_OPTS="--dont-check-part nmu --no-tag-display-limit --display-info --show-overrides --fail-on error --fail-on warning" \
+#    -e LINTIAN_DONT_CHECK_PARTS="nmu" \
+#    -e LINTIAN_TAGS_TO_SUPPRESS="debian-changelog-line-too-long" \
+#    -e LINTIAN_FAIL_ON_ERROR=1 \
+#    -e LINTIAN_FAIL_ON_WARNING=1 \
+#    -e LINTIAN_OPTS="" \
+#    -e DPKG_BUILDPACKAGE_OPTS="" \
     pitop/deb-build:latest
 done
 ```

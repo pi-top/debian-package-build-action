@@ -29,6 +29,18 @@ if [[ "${DEBUG}" -eq 1 ]]; then
   ls -l
 fi
 
+if [[ "${DPKG_BUILDPACKAGE_GPG_SIGN}" -eq 0 ]]; then
+  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-sign"
+fi
+
+if [[ "${DPKG_BUILDPACKAGE_CHECK_BUILDDEPS}" -eq 0 ]]; then
+  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-check-builddeps"
+fi
+
+if [[ "${DPKG_BUILDPACKAGE_POST_CLEAN}" -eq 1 ]]; then
+  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --post-clean"
+fi
+
 debug_echo "DEBUG: print DPKG_BUILDPACKAGE_OPTS..."
 debug_echo "${DPKG_BUILDPACKAGE_OPTS}"
 
