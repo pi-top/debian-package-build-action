@@ -24,8 +24,9 @@ if [[ ! -f "${changes_file}" ]]; then
  exit 1
 fi
 
-if [[ "${LINTIAN_NO_FAIL}" -eq 0 ]]; then
+if [[ "${LINTIAN_NO_FAIL}" -eq 1 ]]; then
   LINTIAN_OPTS="${LINTIAN_OPTS} --fail-on none"
+else
   if [[ "${LINTIAN_FAIL_ON_ERROR}" -eq 1 ]]; then
     LINTIAN_OPTS="${LINTIAN_OPTS} --fail-on error"
   fi
