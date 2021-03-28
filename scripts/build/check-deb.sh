@@ -55,10 +55,6 @@ if [[ "${LINTIAN_SHOW_OVERRIDES}" -eq 1 ]]; then
   LINTIAN_OPTS="${LINTIAN_OPTS} --show-overrides"
 fi
 
-if [[ "${LINTIAN_SHOW_OVERRIDES}" -eq 1 ]]; then
-  LINTIAN_OPTS="${LINTIAN_OPTS} --show-overrides"
-fi
-
 if [[ -n "${LINTIAN_DONT_CHECK_PARTS}" ]]; then
   LINTIAN_OPTS="${LINTIAN_OPTS} --dont-check-part ${LINTIAN_DONT_CHECK_PARTS}"
 fi
