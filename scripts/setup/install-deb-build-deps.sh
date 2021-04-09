@@ -9,6 +9,8 @@ IFS=$'\n\t'
 
 repos=("pi-top-Python-SDK" "pi-top-Python-Common-Library" "pt-sys-oled")
 
+additional_packages=("qtwebengine5-dev")
+
 # Tell apt-get we're never going to be able to give manual feedback
 export DEBIAN_FRONTEND=noninteractive
 
@@ -25,6 +27,9 @@ for repo in "${repos[@]}"; do
   apt-get build-dep -y .
 done
 rm -rf ./debian
+
+# Install additional packages
+apt-get install -y ${additional_packages[@]}
 
 # Delete cached files we don't need anymore
 apt-get clean
