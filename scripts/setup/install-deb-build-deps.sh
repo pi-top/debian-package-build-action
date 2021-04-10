@@ -40,6 +40,10 @@ for repo in "${repos[@]}"; do
 done
 rm -rf ./debian
 
+# Debug
+apt policy libasound2
+apt policy libasound2-data
+
 # Install additional packages
 apt-get install -y ${additional_packages[@]}
 
