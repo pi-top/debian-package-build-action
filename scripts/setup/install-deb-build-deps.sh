@@ -13,8 +13,8 @@ repos=(
   "pt-sys-oled"
 )
 
-# Testing additional packages
-additional_packages=(
+# ARM-only packages (until related packages are installed)
+arm_only_packages=(
   "qtwebengine5-dev"
   "libqt5webengine5"
   "libqt5webenginecore5"
@@ -40,12 +40,10 @@ for repo in "${repos[@]}"; do
 done
 rm -rf ./debian
 
-# Debug
-apt policy libasound2
-apt policy libasound2-data
-
-# Install additional packages
-apt-get install -y ${additional_packages[@]}
+# Install arm-only packages
+if [[ $(uname -m) == "arm"* ]]; then
+  apt-get install -y ${arm_only_packages[@]}
+fi
 
 # Delete cached files we don't need anymore
 apt-get clean
