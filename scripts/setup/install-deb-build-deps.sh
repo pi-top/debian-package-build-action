@@ -19,6 +19,8 @@ additional_packages=(
   "libqt5webengine5"
   "libqt5webenginecore5"
   "libqt5webenginewidgets5"
+  "libasound2"
+  "libasound2-data"
 )
 
 # Tell apt-get we're never going to be able to give manual feedback
