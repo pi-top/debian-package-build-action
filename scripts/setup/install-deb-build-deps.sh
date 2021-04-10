@@ -7,9 +7,19 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-repos=("pi-top-Python-SDK" "pi-top-Python-Common-Library" "pt-sys-oled")
+repos=(
+  "pi-top-Python-SDK"
+  "pi-top-Python-Common-Library"
+  "pt-sys-oled"
+)
 
-additional_packages=("qtwebengine5-dev")
+# Testing additional packages
+additional_packages=(
+  "qtwebengine5-dev"
+  "libqt5webengine5"
+  "libqt5webenginecore5"
+  "libqt5webenginewidgets5"
+)
 
 # Tell apt-get we're never going to be able to give manual feedback
 export DEBIAN_FRONTEND=noninteractive
