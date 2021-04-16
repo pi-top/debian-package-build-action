@@ -13,6 +13,11 @@ repos=(
   "pt-sys-oled"
 )
 
+packages_from_private_repos=(
+  # web UIs
+  "npm"
+)
+
 # ARM-only packages (until related packages are installed)
 arm_only_packages=(
   "qtwebengine5-dev"
@@ -39,6 +44,9 @@ for repo in "${repos[@]}"; do
   apt-get build-dep -y .
 done
 rm -rf ./debian
+
+# Install extra packages from private repos
+apt-get install -y ${packages_from_private_repos[@]}
 
 # Install arm-only packages
 if [[ $(uname -m) == "arm"* ]]; then
