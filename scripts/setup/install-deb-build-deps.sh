@@ -10,6 +10,7 @@ IFS=$'\n\t'
 repos=(
   "pi-top-Python-SDK"
   "pi-top-Python-Common-Library"
+  "pt-shutdown-helper"
   "pt-sys-oled"
   "pt-web-ui"
 )
