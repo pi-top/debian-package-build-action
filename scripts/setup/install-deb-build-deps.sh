@@ -31,11 +31,11 @@ apt-get -y install wget
 function install_build_deps_for_repo() {
   repo="${1}"
   tmp=$(mktemp -d)
-  mkdir ./${tmp}/debian
-  cd ./${tmp}
+  cd ${tmp}
+  mkdir debian
   wget "https://raw.githubusercontent.com/pi-top/${repo}/master/debian/control" -O ./debian/control
   apt-get build-dep -y .
-  rm -rf ./${tmp}
+  rm -rf ${tmp}
 }
 
 # Install build dependencies
