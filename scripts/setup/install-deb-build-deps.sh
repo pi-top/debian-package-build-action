@@ -12,22 +12,11 @@ repos=(
   "pi-top-Python-Common-Library"
   "pt-shutdown-helper"
   "pt-sys-oled"
+)
+
+# ARM-only repositories (dependencies not available on amd64)
+arm_only_repos=(
   "pt-web-ui"
-)
-
-packages_from_private_repos=(
-  # web UIs
-  "npm"
-)
-
-# ARM-only packages (until related packages are installed)
-arm_only_packages=(
-  "qtwebengine5-dev"
-  "libqt5webengine5"
-  "libqt5webenginecore5"
-  "libqt5webenginewidgets5"
-  "libasound2"
-  "libasound2-data"
 )
 
 # Tell apt-get we're never going to be able to give manual feedback
@@ -47,12 +36,13 @@ for repo in "${repos[@]}"; do
 done
 rm -rf ./debian
 
-# Install extra packages from private repos
-apt-get install -y ${packages_from_private_repos[@]}
-
-# Install arm-only packages
+# Install arm-only build dependencies if arm
 if [[ $(uname -m) == "arm"* ]]; then
-  apt-get install -y ${arm_only_packages[@]}
+  for repo in "${arm_only_repos[@]}"; do
+    wget "https://raw.githubusercontent.com/pi-top/${repo}/master/debian/control" -O ./debian/control
+    apt-get build-dep -y .
+  done
+  rm -rf ./debian
 fi
 
 # Delete cached files we don't need anymore
