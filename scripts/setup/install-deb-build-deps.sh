@@ -11,6 +11,7 @@ repos=(
   "pi-top-Python-SDK"
   "pi-top-Python-Common-Library"
   "pt-sys-oled"
+  "pt-web-ui"
 )
 
 packages_from_private_repos=(
