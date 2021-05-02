@@ -1,48 +1,26 @@
-# pi-top Docker image for building pi-top Debian packages for Raspberry Pi
+# pi-top Docker-based Debian package builder
 
-## How to use
+This repository builds pi-top's `deb-build` image, used across [pi-top's code base](https://github.com/pi-top/) to create Debian packages for Raspberry Pi.
 
-### Enable experimental features on host machine
-_(This only needs to be done once)_
+### How to use
 
-```sh
-echo -e "{\n  \"experimental\": true\n}" | sudo tee /etc/docker/daemon.json &> /dev/null
-sudo service docker restart
-
+As a GitHub Action, start Docker container based on source code's architecture:
 ```
-
-### Start Docker container based on source code's architecture
-
-The following snippet will use `amd64` for packages that do not require compilation, which will result in the fastest package building.
-Packages that require compilation will be built in a container that is emulating ARM hardware (32 and 64 bit), which results in a slower build.
-```sh
-platforms=()
-if [[ "$(grep "Architecture" debian/control | grep -v "all")" != "" ]]; then
-  docker run --privileged --rm docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
-
-  platforms+=("linux/arm/v7")
-  platforms+=("linux/arm64")
-else
-  platforms+=("linux/amd64")
-fi
-
-# Source files are in current directory
-# Build files will be in /tmp
-for platform in ${platforms[@]}; do
-  docker run --rm \
-    --platform=${platform} \
-    --volume $(pwd):/src \
-    --volume /tmp:/build \
-#    -e BUILD=1 \
-#    -e CHECK=1 \
-#    -e LINTIAN_DONT_CHECK_PARTS="nmu" \
-#    -e LINTIAN_TAGS_TO_SUPPRESS="debian-changelog-line-too-long" \
-#    -e LINTIAN_FAIL_ON_ERROR=1 \
-#    -e LINTIAN_FAIL_ON_WARNING=1 \
-#    -e LINTIAN_OPTS="" \
-#    -e DPKG_BUILDPACKAGE_OPTS="" \
-    pitop/deb-build:latest
-done
+      - name: Build Debian package
+        run: |
+          platform="linux/amd64"
+          if grep '^Architecture:' debian/control | grep -q -v 'all'; then
+            echo "Package requires emulation - starting binfmt"
+            docker run --privileged --rm docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
+            platform="linux/arm/v7,linux/arm64"
+          fi
+          mkdir -p /tmp/artifacts/{src,bin}
+          docker run --rm \
+            --volume ${{ github.workspace }}:/src \
+            --volume /tmp/artifacts/bin:/build \
+            --platform="${platform}" \
+            -e LINTIAN_TAGS_TO_SUPPRESS="debian-changelog-line-too-long,spelling-error-in-changelog,unreleased-changelog-distribution" \
+            pitop/deb-build:latest
 ```
 
 ### Environment Variables
