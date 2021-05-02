@@ -28,21 +28,26 @@ apt-get update
 # Install wget for getting control files for repos
 apt-get -y install wget
 
-# Install build dependencies
-mkdir ./debian
-for repo in "${repos[@]}"; do
+function install_build_deps_for_repo() {
+  repo="${1}"
+  tmp=$(mktemp -d)
+  mkdir ./${tmp}/debian
+  cd ./${tmp}
   wget "https://raw.githubusercontent.com/pi-top/${repo}/master/debian/control" -O ./debian/control
   apt-get build-dep -y .
+  rm -rf ./${tmp}
+}
+
+# Install build dependencies
+for repo in "${repos[@]}"; do
+  install_build_deps_for_repo ${repo}
 done
-rm -rf ./debian
 
 # Install arm-only build dependencies if arm
 if [[ $(uname -m) == "arm"* ]]; then
   for repo in "${arm_only_repos[@]}"; do
-    wget "https://raw.githubusercontent.com/pi-top/${repo}/master/debian/control" -O ./debian/control
-    apt-get build-dep -y .
+    install_build_deps_for_repo ${repo}
   done
-  rm -rf ./debian
 fi
 
 # Delete cached files we don't need anymore
