@@ -16,7 +16,7 @@ debug_echo() {
 tmp_dir_root=$(mktemp -d)
 
 debug_echo "Copying source files to temporary directory (${tmp_dir_root})..."
-tmp_dir_src="${tmp_dir_root_src}/src"
+tmp_dir_src="${tmp_dir_root}/src"
 mkdir "${tmp_dir_src}"
 cp -r /src/* "${tmp_dir_src}/"
 
