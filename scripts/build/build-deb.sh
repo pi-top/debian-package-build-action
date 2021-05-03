@@ -16,12 +16,12 @@ debug_echo() {
 tmp_dir_root=$(mktemp -d)
 
 debug_echo "Copying source files to temporary directory (${tmp_dir_root})..."
-tmp_dir="${tmp_dir_root}/src"
-mkdir "${tmp_dir}"
-cp -r /src/* "${tmp_dir}/"
+tmp_dir_src="${tmp_dir_root_src}/src"
+mkdir "${tmp_dir_src}"
+cp -r /src/* "${tmp_dir_src}/"
 
 debug_echo "Changing working directory to temporary directory..."
-cd "${tmp_dir}"
+cd "${tmp_dir_src}"
 
 debug_echo "DEBUG: Listing temporary directory contents BEFORE building..."
 if [[ "${DEBUG}" -eq 1 ]]; then
@@ -49,12 +49,12 @@ IFS=' ' read -ra DPKG_BUILDPACKAGE_OPTS_ARR <<<"$DPKG_BUILDPACKAGE_OPTS"
 if ! grep -q "3.0 (native)" ./debian/source/format; then
   debug_echo "Package is not native Debian package - creating tarball of source..."
 
-  source_package="$(head -n1 debian/changelog | awk '{print $1}')"
-  upstream_version="$(dpkg-parsechangelog -Sversion | cut -d'-' -f1)"
+  source_package="$(dpkg-parsechangelog --show-field Source)"
+  upstream_version="$(dpkg-parsechangelog --show-field Version | cut -d'-' -f1)"
   tar \
     --exclude-vcs \
     --exclude ./debian \
-    -cvzf "/build/${source_package}_${upstream_version}.orig.tar.gz" \
+    -cvzf "../${source_package}_${upstream_version}.orig.tar.gz" \
     -C /src \
     ./
 else
