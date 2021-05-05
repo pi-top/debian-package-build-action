@@ -16,6 +16,7 @@ repos=(
 
 # ARM-only repositories (dependencies not available on amd64)
 arm_only_repos=(
+  "raspi2png"
   "pt-web-ui"
 )
 
