@@ -9,7 +9,6 @@ IFS=$'\n\t'
 
 repos=(
   "pi-top-Python-SDK"
-  "pi-top-Python-Common-Library"
   "pt-shutdown-helper"
   "pt-sys-oled"
 )
@@ -17,7 +16,7 @@ repos=(
 # ARM-only repositories (dependencies not available on amd64)
 arm_only_repos=(
   "raspi2png"
-  "pt-web-ui"
+  "web-renderer"
 )
 
 # Tell apt-get we're never going to be able to give manual feedback
