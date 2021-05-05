@@ -62,8 +62,6 @@ if ! grep -q "3.0 (native)" ./debian/source/format; then
   tar \
     --exclude-vcs \
     --exclude debian \
-    --exclude .github \
-    --exclude Jenkinsfile \
     --create --gzip \
     --verbose \
     --file="../${upstream_tarball_file}" \
