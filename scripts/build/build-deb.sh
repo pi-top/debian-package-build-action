@@ -25,7 +25,7 @@ cd "${tmp_dir_src}"
 
 debug_echo "DEBUG: Listing temporary directory contents BEFORE building..."
 if [[ "${DEBUG}" -eq 1 ]]; then
-  ls -l
+  ls -la
 fi
 
 if [[ "${DPKG_BUILDPACKAGE_GPG_SIGN}" -eq 0 ]]; then
@@ -77,7 +77,7 @@ dpkg-buildpackage "${DPKG_BUILDPACKAGE_OPTS_ARR[@]}" | tee "${DPKG_BUILDPACKAGE_
 
 debug_echo "DEBUG: Listing temporary directory contents AFTER building..."
 if [[ "${DEBUG}" -eq 1 ]]; then
-  ls -l
+  ls -la
 fi
 
 debug_echo "Moving build files to /build..."
@@ -89,7 +89,7 @@ done
 
 debug_echo "DEBUG: Listing /build directory contents..."
 if [[ "${DEBUG}" -eq 1 ]]; then
-  ls -l /build
+  ls -la /build
 fi
 
 debug_echo "DONE!"
