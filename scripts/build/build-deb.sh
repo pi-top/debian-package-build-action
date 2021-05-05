@@ -47,16 +47,27 @@ debug_echo "Parsing dpkg-buildpackage arguments..."
 IFS=' ' read -ra DPKG_BUILDPACKAGE_OPTS_ARR <<<"$DPKG_BUILDPACKAGE_OPTS"
 
 if ! grep -q "3.0 (native)" ./debian/source/format; then
-  debug_echo "Package is not native Debian package - creating tarball of source..."
 
   source_package="$(dpkg-parsechangelog --show-field Source)"
   upstream_version="$(dpkg-parsechangelog --show-field Version | cut -d'-' -f1)"
+
+  if [[ "${upstream_version}" == *":"* ]]; then
+    upstream_version="$(echo ${upstream_version} | cut -d':' -f2)"
+  fi
+
+  upstream_tarball_file="${source_package}_${upstream_version}.orig.tar.gz"
+
+  debug_echo "Package is not native Debian package - creating tarball of source: ${upstream_tarball_file} ..."
+
   tar \
     --exclude-vcs \
-    --exclude ./debian \
-    -cvzf "../${source_package}_${upstream_version}.orig.tar.gz" \
-    -C /src \
-    ./
+    --exclude debian \
+    --exclude .github \
+    --exclude Jenkinsfile \
+    --create --gzip \
+    --verbose \
+    --file="../${upstream_tarball_file}" \
+    .
 else
   debug_echo "Package is native Debian package - skipping tarball..."
 fi
