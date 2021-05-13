@@ -49,7 +49,7 @@ IFS=' ' read -ra DPKG_BUILDPACKAGE_OPTS_ARR <<<"$DPKG_BUILDPACKAGE_OPTS"
 if ! grep -q "3.0 (native)" ./debian/source/format; then
 
   source_package="$(dpkg-parsechangelog --show-field Source)"
-  upstream_version="$(dpkg-parsechangelog --show-field Version | cut -d'-' -f1)"
+  upstream_version="$(dpkg-parsechangelog --show-field Version)"
 
   if [[ "${upstream_version}" == *":"* ]]; then
     upstream_version="$(echo ${upstream_version} | cut -d':' -f2)"
