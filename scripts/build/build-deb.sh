@@ -50,17 +50,12 @@ if ! grep -q "3.0 (native)" ./debian/source/format; then
 
   source_package="$(dpkg-parsechangelog --show-field Source)"
   upstream_version="$(dpkg-parsechangelog --show-field Version | cut -d'-' -f1)"
-  debian_revision="$(dpkg-parsechangelog --show-field Version | cut -d'-' -f2)"
 
   if [[ "${upstream_version}" == *":"* ]]; then
     upstream_version="$(echo ${upstream_version} | cut -d':' -f2)"
   fi
 
-  if [ ! -z "${debian_revision}" ]; then
-    upstream_tarball_file="${source_package}_${upstream_version}.orig-${debian_revision}.tar.gz"
-  else
-    upstream_tarball_file="${source_package}_${upstream_version}.orig.tar.gz"
-  fi
+  upstream_tarball_file="${source_package}_${upstream_version}.orig.tar.gz"
 
   debug_echo "Package is not native Debian package - creating tarball of source: ${upstream_tarball_file} ..."
 
