@@ -40,7 +40,7 @@ ENV DPKG_BUILDPACKAGE_OPTS=""
 # lintian configuration
 # Comma-separated
 ENV LINTIAN_DONT_CHECK_PARTS="nmu"
-ENV LINTIAN_TAGS_TO_SUPPRESS="initial-upload-closes-no-bugs"
+ENV LINTIAN_TAGS_TO_SUPPRESS="initial-upload-closes-no-bugs,debian-watch-file-is-missing"
 # Boolean
 ENV LINTIAN_DISPLAY_INFO=1
 ENV LINTIAN_SHOW_OVERRIDES=1
