@@ -13,8 +13,8 @@ debug_echo() {
   fi
 }
 
-source_package="$(dpkg-parsechangelog --show-field Source)"
-upstream_version="$(dpkg-parsechangelog --show-field Version | cut -d'-' -f1)"
+source_package="$(cd /src && dpkg-parsechangelog --show-field Source)"
+upstream_version="$(cd /src && dpkg-parsechangelog --show-field Version | cut -d'-' -f1)"
 # Trim epoch version number
 if [[ "${upstream_version}" == *":"* ]]; then
   upstream_version="$(echo ${upstream_version} | cut -d':' -f2)"
