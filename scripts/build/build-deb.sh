@@ -59,13 +59,23 @@ if ! grep -q "3.0 (native)" ./debian/source/format; then
 
   debug_echo "Package is not native Debian package - creating tarball of source: ${upstream_tarball_file} ..."
 
-  tar \
-    --exclude-vcs \
-    --exclude debian \
-    --create --gzip \
-    --verbose \
-    --file="../${upstream_tarball_file}" \
-    .
+  if [[ -f ./debian/watch ]]; then
+
+    debug_echo "'debian/watch' found - using 'uscan' to create tarball..."
+    uscan --download-current-version --verbose
+
+  else
+
+    debug_echo "'debian/watch' not found - using 'tar' to create tarball..."
+    tar \
+      --exclude-vcs \
+      --exclude debian \
+      --create --gzip \
+      --verbose \
+      --file="../${upstream_tarball_file}" \
+      .
+
+  fi
 else
   debug_echo "Package is native Debian package - skipping tarball..."
 fi
