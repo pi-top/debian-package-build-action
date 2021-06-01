@@ -15,6 +15,10 @@ debug_echo() {
 
 source_package="$(dpkg-parsechangelog --show-field Source)"
 upstream_version="$(dpkg-parsechangelog --show-field Version | cut -d'-' -f1)"
+# Trim epoch version number
+if [[ "${upstream_version}" == *":"* ]]; then
+  upstream_version="$(echo ${upstream_version} | cut -d':' -f2)"
+fi
 
 tmp_dir_root=$(mktemp -d)
 
@@ -50,10 +54,6 @@ debug_echo "Parsing dpkg-buildpackage arguments..."
 IFS=' ' read -ra DPKG_BUILDPACKAGE_OPTS_ARR <<<"$DPKG_BUILDPACKAGE_OPTS"
 
 if ! grep -q "3.0 (native)" ./debian/source/format; then
-
-  if [[ "${upstream_version}" == *":"* ]]; then
-    upstream_version="$(echo ${upstream_version} | cut -d':' -f2)"
-  fi
 
   upstream_tarball_file="${source_package}_${upstream_version}.orig.tar.gz"
 
