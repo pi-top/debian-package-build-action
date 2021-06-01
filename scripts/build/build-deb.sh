@@ -13,10 +13,13 @@ debug_echo() {
   fi
 }
 
+source_package="$(dpkg-parsechangelog --show-field Source)"
+upstream_version="$(dpkg-parsechangelog --show-field Version | cut -d'-' -f1)"
+
 tmp_dir_root=$(mktemp -d)
 
 debug_echo "Copying source files to temporary directory (${tmp_dir_root})..."
-tmp_dir_src="${tmp_dir_root}/src"
+tmp_dir_src="${tmp_dir_root}/${source_package}-${upstream_version}"
 mkdir "${tmp_dir_src}"
 cp -r /src/* "${tmp_dir_src}/"
 
@@ -48,9 +51,6 @@ IFS=' ' read -ra DPKG_BUILDPACKAGE_OPTS_ARR <<<"$DPKG_BUILDPACKAGE_OPTS"
 
 if ! grep -q "3.0 (native)" ./debian/source/format; then
 
-  source_package="$(dpkg-parsechangelog --show-field Source)"
-  upstream_version="$(dpkg-parsechangelog --show-field Version | cut -d'-' -f1)"
-
   if [[ "${upstream_version}" == *":"* ]]; then
     upstream_version="$(echo ${upstream_version} | cut -d':' -f2)"
   fi
@@ -63,6 +63,9 @@ if ! grep -q "3.0 (native)" ./debian/source/format; then
 
     debug_echo "'debian/watch' found - using 'uscan' to create tarball..."
     uscan --download-current-version --verbose
+
+    # Extract source files from upstream tarball
+    tar xvf "../${upstream_tarball_file}" -C ../
 
   else
 
