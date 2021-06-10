@@ -14,7 +14,8 @@ debug_echo() {
 }
 
 source_package="$(cd /src && dpkg-parsechangelog --show-field Source)"
-upstream_version="$(cd /src && dpkg-parsechangelog --show-field Version | cut -d'-' -f1)"
+# Trim repack suffix and revision number
+upstream_version="$(cd /src && dpkg-parsechangelog --show-field Version | cut -d'-' -f1 | cut -d'+' -f1)"
 # Trim epoch version number
 if [[ "${upstream_version}" == *":"* ]]; then
   upstream_version="$(echo ${upstream_version} | cut -d':' -f2)"
@@ -34,24 +35,6 @@ debug_echo "DEBUG: Listing temporary directory contents BEFORE building..."
 if [[ "${DEBUG}" -eq 1 ]]; then
   ls -la
 fi
-
-if [[ "${DPKG_BUILDPACKAGE_GPG_SIGN}" -eq 0 ]]; then
-  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-sign"
-fi
-
-if [[ "${DPKG_BUILDPACKAGE_CHECK_BUILDDEPS}" -eq 0 ]]; then
-  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-check-builddeps"
-fi
-
-if [[ "${DPKG_BUILDPACKAGE_POST_CLEAN}" -eq 1 ]]; then
-  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --post-clean"
-fi
-
-debug_echo "DEBUG: print DPKG_BUILDPACKAGE_OPTS..."
-debug_echo "${DPKG_BUILDPACKAGE_OPTS}"
-
-debug_echo "Parsing dpkg-buildpackage arguments..."
-IFS=' ' read -ra DPKG_BUILDPACKAGE_OPTS_ARR <<<"$DPKG_BUILDPACKAGE_OPTS"
 
 if ! grep -q "3.0 (native)" ./debian/source/format; then
 
@@ -82,6 +65,24 @@ if ! grep -q "3.0 (native)" ./debian/source/format; then
 else
   debug_echo "Package is native Debian package - skipping tarball..."
 fi
+
+if [[ "${DPKG_BUILDPACKAGE_GPG_SIGN}" -eq 0 ]]; then
+  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-sign"
+fi
+
+if [[ "${DPKG_BUILDPACKAGE_CHECK_BUILDDEPS}" -eq 0 ]]; then
+  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-check-builddeps"
+fi
+
+if [[ "${DPKG_BUILDPACKAGE_POST_CLEAN}" -eq 1 ]]; then
+  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --post-clean"
+fi
+
+debug_echo "DEBUG: print DPKG_BUILDPACKAGE_OPTS..."
+debug_echo "${DPKG_BUILDPACKAGE_OPTS}"
+
+debug_echo "Parsing dpkg-buildpackage arguments..."
+IFS=' ' read -ra DPKG_BUILDPACKAGE_OPTS_ARR <<<"$DPKG_BUILDPACKAGE_OPTS"
 
 debug_echo "Building package..."
 dpkg-buildpackage "${DPKG_BUILDPACKAGE_OPTS_ARR[@]}" | tee "${DPKG_BUILDPACKAGE_LOG_FILE}"
