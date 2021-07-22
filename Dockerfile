@@ -1,5 +1,5 @@
-ARG DISTRO=bullseye
-FROM debian:$DISTRO
+ARG DEBIAN_BASE_IMAGE=bullseye
+FROM debian:$DEBIAN_BASE_IMAGE
 
 # Root of source code to build
 VOLUME /src
@@ -34,7 +34,7 @@ ENV LINTIAN_LOG_FILE="/tmp/lintian.log"
 ENV DPKG_BUILDPACKAGE_GPG_SIGN=0
 ENV DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=0
 ENV DPKG_BUILDPACKAGE_POST_CLEAN=0
-# Manpage: https://manpages.debian.org/$DISTRO/dpkg-dev/dpkg-buildpackage.1.en.html
+# Manpage: https://manpages.debian.org/$DEBIAN_BASE_IMAGE/dpkg-dev/dpkg-buildpackage.1.en.html
 # Space-separated arguments
 ENV DPKG_BUILDPACKAGE_OPTS=""
 
@@ -53,7 +53,7 @@ ENV LINTIAN_FAIL_ON_PEDANTIC=0
 ENV LINTIAN_FAIL_ON_EXPERIMENTAL=0
 ENV LINTIAN_FAIL_ON_OVERRIDE=0
 ENV LINTIAN_NO_FAIL=0
-# Manpage: https://manpages.debian.org/bullseye/lintian/lintian.1.en.html
+# Manpage: https://manpages.debian.org/$DEBIAN_BASE_IMAGE/lintian/lintian.1.en.html
 # Space-separated
 ENV LINTIAN_OPTS=""
 
@@ -65,7 +65,7 @@ ENV FORCE_UNSAFE_CONFIGURE=1
 
 # Install dev packages
 COPY  scripts/setup/install-dev-packages.sh /.install-dev-packages
-RUN /.install-dev-packages
+RUN export DEBIAN_BASE_IMAGE=$DEBIAN_BASE_IMAGE /.install-dev-packages
 
 # Install Node.js from Nodesource
 COPY  scripts/setup/install-nodejs-from-nodesource.sh /.install-nodejs-from-nodesource
