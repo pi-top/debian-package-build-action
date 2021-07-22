@@ -7,8 +7,6 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-APT_COMMAND="apt-get -y install --no-install-recommends"
-
 # Tell apt-get we're never going to be able to give manual feedback
 export DEBIAN_FRONTEND=noninteractive
 
@@ -17,11 +15,12 @@ apt-get update
 
 echo "Determining base image..."
 if [[ -z "${DEBIAN_BASE_IMAGE:-}" ]]; then
-  if [[ -n "${1}" ]]; then
+  echo "DEBIAN_BASE_IMAGE not set"
+  if [[ -n "${1:-}" ]]; then
     DEBIAN_BASE_IMAGE="${1}"
   else
-    echo "Installing lsb-release..."
-    ${APT_COMMAND} lsb-release
+    echo "No command line argument - installing lsb-release..."
+    apt-get -y install --no-install-recommends lsb-release
     DEBIAN_BASE_IMAGE="$(lsb_release -cs)"
   fi
 fi
@@ -33,7 +32,7 @@ support_packages=("apt-transport-https" "ca-certificates" "curl" "software-prope
 dev_packages=("debhelper" "devscripts" "dpkg-dev" "fakeroot" "lintian" "sudo")
 
 echo "Installing tools to get/install APT key..."
-${APT_COMMAND} -t "${DEBIAN_BASE_IMAGE}" "${support_packages[@]}"
+apt-get -y install --no-install-recommends -t "${DEBIAN_BASE_IMAGE}" "${support_packages[@]}"
 
 echo "Adding Raspberry Pi's repo..."
 curl -fsSL http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | apt-key add -
@@ -50,7 +49,7 @@ echo "Installing security updates..."
 apt-get -y upgrade
 
 echo "Installing new packages, without unnecessary recommended packages..."
-${APT_COMMAND} -t "${DEBIAN_BASE_IMAGE}" "${dev_packages[@]}"
+apt-get -y install --no-install-recommends -t "${DEBIAN_BASE_IMAGE}" "${dev_packages[@]}"
 
 echo "Deleting cached files we don't need anymore..."
 apt-get clean

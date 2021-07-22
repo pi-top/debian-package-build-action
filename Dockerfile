@@ -1,5 +1,8 @@
 ARG DEBIAN_BASE_IMAGE=bullseye
+
 FROM debian:$DEBIAN_BASE_IMAGE
+
+ENV DEBIAN_BASE_IMAGE = ${DEBIAN_BASE_IMAGE:-bullseye}
 
 # Root of source code to build
 VOLUME /src
@@ -65,7 +68,7 @@ ENV FORCE_UNSAFE_CONFIGURE=1
 
 # Install dev packages
 COPY  scripts/setup/install-dev-packages.sh /.install-dev-packages
-RUN /.install-dev-packages $DEBIAN_BASE_IMAGE
+RUN /.install-dev-packages
 
 # Install Node.js from Nodesource
 COPY  scripts/setup/install-nodejs-from-nodesource.sh /.install-nodejs-from-nodesource
