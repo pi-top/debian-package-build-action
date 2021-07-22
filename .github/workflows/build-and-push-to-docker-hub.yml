@@ -10,6 +10,9 @@ on:
 jobs:
   build-push-docker-hub:
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        distro: ['buster', 'bullseye']
     steps:
       - name: Checkout code
         uses: actions/checkout@v2.2.0
@@ -51,7 +54,7 @@ jobs:
           # ARM   - build requires hardware emulated compilation
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
-          tags: pitop/deb-build:latest
+          tags: pitop/deb-build:${{ matrix.distro }}
 
       - name: Show image digest
         if: github.ref == 'refs/heads/master'
