@@ -1,5 +1,5 @@
-ARG BASE_IMAGE=debian/bullseye:latest
-FROM $BASE_IMAGE
+ARG DISTRO=bullseye
+FROM debian:$DISTRO
 
 # Root of source code to build
 VOLUME /src
