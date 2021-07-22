@@ -7,12 +7,7 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-DEBIAN_BASE_IMAGE="${DEBIAN_BASE_IMAGE:-$(lsb_release -cs)}"
-
-# Can probably remove some of these:
-support_packages=("apt-transport-https" "ca-certificates" "curl" "software-properties-common" "gnupg")
-
-dev_packages=("debhelper" "devscripts" "dpkg-dev" "fakeroot" "lintian" "sudo")
+APT_COMMAND="apt-get -y install --no-install-recommends"
 
 # Tell apt-get we're never going to be able to give manual feedback
 export DEBIAN_FRONTEND=noninteractive
@@ -20,8 +15,25 @@ export DEBIAN_FRONTEND=noninteractive
 echo "Updating package list..."
 apt-get update
 
+echo "Determining base image..."
+if [[ -z "${DEBIAN_BASE_IMAGE}" ]]; then
+  if [[ -n "${1}" ]]; then
+    DEBIAN_BASE_IMAGE="${1}"
+  else
+    echo "Installing lsb-release..."
+    ${APT_COMMAND} lsb-release
+    DEBIAN_BASE_IMAGE="$(lsb_release -cs)"
+  fi
+fi
+echo "Base image: ${DEBIAN_BASE_IMAGE}"
+
+# Can probably remove some of these:
+support_packages=("apt-transport-https" "ca-certificates" "curl" "software-properties-common" "gnupg")
+
+dev_packages=("debhelper" "devscripts" "dpkg-dev" "fakeroot" "lintian" "sudo")
+
 echo "Installing tools to get/install APT key..."
-apt-get -y -t "${DEBIAN_BASE_IMAGE}" install --no-install-recommends "${support_packages[@]}"
+${APT_COMMAND} -t "${DEBIAN_BASE_IMAGE}" "${support_packages[@]}"
 
 echo "Adding Raspberry Pi's repo..."
 curl -fsSL http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | apt-key add -
@@ -38,7 +50,7 @@ echo "Installing security updates..."
 apt-get -y upgrade
 
 echo "Installing new packages, without unnecessary recommended packages..."
-apt-get -y -t "${DEBIAN_BASE_IMAGE}" install --no-install-recommends "${dev_packages[@]}"
+${APT_COMMAND} -t "${DEBIAN_BASE_IMAGE}" "${dev_packages[@]}"
 
 echo "Deleting cached files we don't need anymore..."
 apt-get clean
