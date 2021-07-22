@@ -7,31 +7,16 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-set -x
+# Can probably remove some of these:
+support_packages=("apt-transport-https" "ca-certificates" "curl" "software-properties-common" "gnupg")
+
+dev_packages=("debhelper" "devscripts" "dpkg-dev" "fakeroot" "lintian" "sudo")
 
 # Tell apt-get we're never going to be able to give manual feedback
 export DEBIAN_FRONTEND=noninteractive
 
 echo "Updating package list..."
 apt-get update
-
-echo "Determining base image..."
-if [[ -z "${DEBIAN_BASE_IMAGE:-}" ]]; then
-  echo "DEBIAN_BASE_IMAGE not set"
-  if [[ -n "${1:-}" ]]; then
-    DEBIAN_BASE_IMAGE="${1}"
-  else
-    echo "No command line argument - installing lsb-release..."
-    apt-get -y install --no-install-recommends lsb-release
-    DEBIAN_BASE_IMAGE="$(lsb_release -cs)"
-  fi
-fi
-echo "Base image: ${DEBIAN_BASE_IMAGE}"
-
-# Can probably remove some of these:
-support_packages=("apt-transport-https" "ca-certificates" "curl" "software-properties-common" "gnupg")
-
-dev_packages=("debhelper" "devscripts" "dpkg-dev" "fakeroot" "lintian" "sudo")
 
 echo "Installing tools to get/install APT key..."
 apt-get -y install --no-install-recommends -t "${DEBIAN_BASE_IMAGE}" "${support_packages[@]}"

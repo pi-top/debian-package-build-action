@@ -7,8 +7,6 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-set -x
-
 NODEREPO="node_16.x"
 
 # Can probably remove some of these:
