@@ -1,4 +1,4 @@
-FROM debian:buster-backports
+FROM debian:bullseye
 
 # Root of source code to build
 VOLUME /src
@@ -52,7 +52,7 @@ ENV LINTIAN_FAIL_ON_PEDANTIC=0
 ENV LINTIAN_FAIL_ON_EXPERIMENTAL=0
 ENV LINTIAN_FAIL_ON_OVERRIDE=0
 ENV LINTIAN_NO_FAIL=0
-# Manpage: https://manpages.debian.org/buster-backports/lintian/lintian.1.en.html
+# Manpage: https://manpages.debian.org/bullseye/lintian/lintian.1.en.html
 # Space-separated
 ENV LINTIAN_OPTS=""
 

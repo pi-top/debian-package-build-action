@@ -19,7 +19,7 @@ echo "Updating package list..."
 apt-get update
 
 echo "Installing tools to get/install APT key..."
-apt-get -y -t buster-backports install --no-install-recommends "${support_packages[@]}"
+apt-get -y install --no-install-recommends "${support_packages[@]}"
 
 echo "Adding Raspberry Pi's repo..."
 curl -fsSL http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | apt-key add -
@@ -36,7 +36,7 @@ echo "Installing security updates..."
 apt-get -y upgrade
 
 echo "Installing new packages, without unnecessary recommended packages..."
-apt-get -y -t buster-backports install --no-install-recommends "${dev_packages[@]}"
+apt-get -y install --no-install-recommends "${dev_packages[@]}"
 
 echo "Deleting cached files we don't need anymore..."
 apt-get clean
