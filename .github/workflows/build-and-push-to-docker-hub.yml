@@ -10,6 +10,9 @@ on:
 jobs:
   build-push-docker-hub:
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        base_image: ['buster-backports', 'bullseye']
     steps:
       - name: Checkout code
         uses: actions/checkout@v2.2.0
@@ -49,9 +52,10 @@ jobs:
         with:
           # AMD64 - build requires no compilation (architecture: all)
           # ARM   - build requires hardware emulated compilation
+          build-args: DEBIAN_BASE_IMAGE=${{ matrix.base_image }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
-          tags: pitop/deb-build:latest
+          tags: pitop/deb-build:${{ matrix.base_image }}
 
       - name: Show image digest
         if: github.ref == 'refs/heads/master'

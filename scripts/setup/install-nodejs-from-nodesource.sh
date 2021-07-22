@@ -8,7 +8,6 @@ IFS=$'\n\t'
 ###############################################################
 
 NODEREPO="node_16.x"
-DISTRO="buster"
 
 # Can probably remove some of these:
 support_packages=("apt-transport-https" "ca-certificates" "curl" "software-properties-common" "gnupg")
@@ -21,7 +20,7 @@ export DEBIAN_FRONTEND=noninteractive
 echo "Adding NodeJS repo..."
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
 
-echo "deb https://deb.nodesource.com/${NODEREPO} ${DISTRO} main" >/etc/apt/sources.list.d/nodesource.list
+echo "deb https://deb.nodesource.com/${NODEREPO} $(lsb_release -cs) main" >/etc/apt/sources.list.d/nodesource.list
 
 echo "Updating package list..."
 apt-get update

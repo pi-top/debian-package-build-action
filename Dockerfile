@@ -1,4 +1,8 @@
-FROM debian:buster-backports
+ARG DEBIAN_BASE_IMAGE=bullseye
+
+FROM debian:$DEBIAN_BASE_IMAGE
+
+ENV DEBIAN_BASE_IMAGE $DEBIAN_BASE_IMAGE
 
 # Root of source code to build
 VOLUME /src
@@ -33,7 +37,7 @@ ENV LINTIAN_LOG_FILE="/tmp/lintian.log"
 ENV DPKG_BUILDPACKAGE_GPG_SIGN=0
 ENV DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=0
 ENV DPKG_BUILDPACKAGE_POST_CLEAN=0
-# Manpage: https://manpages.debian.org/buster/dpkg-dev/dpkg-buildpackage.1.en.html
+# Manpage: https://manpages.debian.org/$DEBIAN_BASE_IMAGE/dpkg-dev/dpkg-buildpackage.1.en.html
 # Space-separated arguments
 ENV DPKG_BUILDPACKAGE_OPTS=""
 
@@ -52,7 +56,7 @@ ENV LINTIAN_FAIL_ON_PEDANTIC=0
 ENV LINTIAN_FAIL_ON_EXPERIMENTAL=0
 ENV LINTIAN_FAIL_ON_OVERRIDE=0
 ENV LINTIAN_NO_FAIL=0
-# Manpage: https://manpages.debian.org/buster-backports/lintian/lintian.1.en.html
+# Manpage: https://manpages.debian.org/$DEBIAN_BASE_IMAGE/lintian/lintian.1.en.html
 # Space-separated
 ENV LINTIAN_OPTS=""
 
