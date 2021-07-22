@@ -16,7 +16,7 @@ echo "Updating package list..."
 apt-get update
 
 echo "Determining base image..."
-if [[ -z "${DEBIAN_BASE_IMAGE}" ]]; then
+if [[ -z "${DEBIAN_BASE_IMAGE:-}" ]]; then
   if [[ -n "${1}" ]]; then
     DEBIAN_BASE_IMAGE="${1}"
   else
