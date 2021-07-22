@@ -65,7 +65,7 @@ ENV FORCE_UNSAFE_CONFIGURE=1
 
 # Install dev packages
 COPY  scripts/setup/install-dev-packages.sh /.install-dev-packages
-RUN export DEBIAN_BASE_IMAGE=$DEBIAN_BASE_IMAGE /.install-dev-packages
+RUN DEBIAN_BASE_IMAGE=$DEBIAN_BASE_IMAGE /.install-dev-packages
 
 # Install Node.js from Nodesource
 COPY  scripts/setup/install-nodejs-from-nodesource.sh /.install-nodejs-from-nodesource

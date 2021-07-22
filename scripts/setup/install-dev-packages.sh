@@ -7,7 +7,7 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-DEBIAN_BASE_IMAGE=${DEBIAN_BASE_IMAGE:-$(lsb_release -cs)}
+DEBIAN_BASE_IMAGE="${DEBIAN_BASE_IMAGE:-$(lsb_release -cs)}"
 
 # Can probably remove some of these:
 support_packages=("apt-transport-https" "ca-certificates" "curl" "software-properties-common" "gnupg")
