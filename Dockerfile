@@ -34,7 +34,7 @@ ENV LINTIAN_LOG_FILE="/tmp/lintian.log"
 ENV DPKG_BUILDPACKAGE_GPG_SIGN=0
 ENV DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=0
 ENV DPKG_BUILDPACKAGE_POST_CLEAN=0
-# Manpage: https://manpages.debian.org/buster/dpkg-dev/dpkg-buildpackage.1.en.html
+# Manpage: https://manpages.debian.org/$DISTRO/dpkg-dev/dpkg-buildpackage.1.en.html
 # Space-separated arguments
 ENV DPKG_BUILDPACKAGE_OPTS=""
 
