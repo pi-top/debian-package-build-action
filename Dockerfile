@@ -1,4 +1,5 @@
-FROM debian:bullseye
+ARG DISTRO=bullseye
+FROM debian/$DISTRO:latest
 
 # Root of source code to build
 VOLUME /src
@@ -68,7 +69,7 @@ RUN /.install-dev-packages
 
 # Install Node.js from Nodesource
 COPY  scripts/setup/install-nodejs-from-nodesource.sh /.install-nodejs-from-nodesource
-RUN /.install-nodejs-from-nodesource
+RUN /.install-nodejs-from-nodesource "${DISTRO}"
 
 # Install build dependency packages
 COPY  scripts/setup/install-deb-build-deps.sh /.install-deb-build-deps

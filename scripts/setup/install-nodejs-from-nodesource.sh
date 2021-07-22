@@ -8,7 +8,7 @@ IFS=$'\n\t'
 ###############################################################
 
 NODEREPO="node_16.x"
-DISTRO="buster"
+DISTRO="${1:-"bullseye"}"
 
 # Can probably remove some of these:
 support_packages=("apt-transport-https" "ca-certificates" "curl" "software-properties-common" "gnupg")
