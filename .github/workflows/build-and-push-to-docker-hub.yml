@@ -9,6 +9,11 @@ on:
     # Run daily at midnight
     - cron:  '0 0 * * *'
 
+env:
+  BASE_IMAGE_FOR_LATEST: "buster-backports"
+  IMAGE_NAME: "pitop/deb-build-img"
+  DEPLOY_BRANCH: "develop"  # TODO: replace with 'master' (note: hard-coded)
+
 jobs:
   build-push-docker-hub:
     runs-on: ubuntu-20.04
@@ -47,6 +52,26 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
+      - name: Determine if using "latest" tag
+        run: |
+          base_image_is_stable=false
+          if [[ "${{ matrix.base_image }}" == "${{ env.BASE_IMAGE_FOR_LATEST }}" ]]; then
+            base_image_is_stable=true
+          fi
+
+          echo "USE_LATEST_TAG=${base_image_is_stable}" >> $GITHUB_ENV
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          flavor: |
+            latest=${{ env.USE_LATEST_TAG }}
+            prefix=${{ matrix.base_image }}-,onlatest=false
+          tags: |
+            type=ref,event=branch
+
       - name: Build and push
         id: docker_build_push
         if: github.ref == 'refs/heads/master'
@@ -56,8 +81,9 @@ jobs:
           # ARM   - build requires hardware emulated compilation
           build-args: DEBIAN_BASE_IMAGE=${{ matrix.base_image }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7
-          push: true
-          tags: pitop/deb-build-img:${{ matrix.base_image }}
+          push: ${{ github.ref == 'refs/heads/develop' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Show image digest
         if: github.ref == 'refs/heads/master'
