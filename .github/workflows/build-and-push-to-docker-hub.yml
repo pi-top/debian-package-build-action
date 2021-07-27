@@ -1,13 +1,6 @@
 name: Build Image, Push to Docker Hub (on master)
 
 on:
-  workflow_dispatch:
-    branches:
-      - develop
-  push:
-    paths:
-      - "Dockerfile"
-      - "scripts/**"
   schedule:
     # Run daily at midnight
     - cron:  '0 0 * * *'
