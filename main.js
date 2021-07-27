@@ -171,6 +171,7 @@ async function main() {
             core.startGroup("Building Debian package")
             await exec.exec("docker", [
                 "exec",
+                container,
                 "/build-deb"
             ])
             core.endGroup()
@@ -180,6 +181,7 @@ async function main() {
             core.startGroup("Checking packages")
             await exec.exec("docker", [
                 "exec",
+                container,
                 "/check-deb"
             ])
             core.endGroup()
