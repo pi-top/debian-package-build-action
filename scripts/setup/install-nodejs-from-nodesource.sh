@@ -18,7 +18,7 @@ dev_packages=("debhelper" "devscripts" "dpkg-dev" "fakeroot" "lintian" "sudo")
 export DEBIAN_FRONTEND=noninteractive
 
 echo "Adding NodeJS repo..."
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+curl -fsSLk https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
 
 echo "deb https://deb.nodesource.com/${NODEREPO} $(lsb_release -cs) main" >/etc/apt/sources.list.d/nodesource.list
 
