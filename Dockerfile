@@ -14,7 +14,6 @@ COPY scripts/build/install-deb-build-deps.sh /install-deb-build-deps
 COPY scripts/build/build-deb.sh /build-deb
 COPY scripts/build/check-deb.sh /check-deb
 COPY scripts/build/entrypoint.sh /entrypoint
-ENTRYPOINT ["/entrypoint"]
 
 #########################
 # Environment variables #
