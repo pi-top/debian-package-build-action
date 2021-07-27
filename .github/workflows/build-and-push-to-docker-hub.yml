@@ -23,14 +23,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Build, don't push (test)
-        if: github.ref != 'refs/heads/master'
-        uses: docker/build-push-action@v2
-        with:
-          # AMD64 - just to test
-          platforms: linux/amd64
-          push: false
-
       - name: Set up QEMU
         if: github.ref == 'refs/heads/master'
         uses: docker/setup-qemu-action@v1
