@@ -7,7 +7,7 @@ const fs = require("fs")
 
 async function main() {
     try {
-        let container = "a-name";
+        let container = "deb-builder";
         let DEBIAN_BASE_IMAGE = "bullseye";
 
         const dockerImage = core.getInput("docker_image") || "pitop/deb-build-img:bullseye-develop"
@@ -22,6 +22,7 @@ async function main() {
         // Stages - boolean
         const DEBUG = core.getInput("DEBUG") || "0"
         const INSTALL_BUILD_DEPS = core.getInput("INSTALL_BUILD_DEPS") || "1"
+        const INSTALL_DEPS = core.getInput("INSTALL_DEPS") || "1"
         const BUILD = core.getInput("BUILD") || "1"
         const CHECK = core.getInput("CHECK") || "1"
         // Build configuration
@@ -118,40 +119,45 @@ async function main() {
         core.saveState("container", container)
         core.endGroup()
 
-        core.startGroup("Installing dependencies")
-        await exec.exec("docker", [
-            "exec",
-            container,
-            "sudo",
-            "apt-get",
-            "update",
-        ])
-        await exec.exec("docker", [
-            "exec",
-            container,
-            "sudo",
-            "apt-get",
-            "upgrade",
-            "-y",
-        ])
-        await exec.exec("docker", [
-            "exec",
-            container,
-            "sudo",
-            "apt-get",
-            "-y",
-            "install",
-            "--no-install-recommends",
-            "-t",
-            DEBIAN_BASE_IMAGE,
-            "debhelper",
-            "devscripts",
-            "dpkg-dev",
-            "fakeroot",
-            "lintian",
-            "sudo"
-        ])
-        core.endGroup()
+        if (INSTALL_DEPS) {
+            core.startGroup("Installing dependencies")
+            await exec.exec("docker", [
+                "exec",
+                container,
+                "sudo",
+                "apt-get",
+                "update",
+            ])
+            await exec.exec("docker", [
+                "exec",
+                container,
+                "sudo",
+                "apt-get",
+                "upgrade",
+                "-y",
+            ])
+
+            // e.g. 'buster-backports' vs 'bullseye'
+            includeBackports = DEBIAN_BASE_IMAGE.includes("-");
+            backportsOpts = includeBackports ? ["-t", DEBIAN_BASE_IMAGE] : [];
+            await exec.exec("docker", [
+                "exec",
+                container,
+                "sudo",
+                "apt-get",
+                "-y",
+                "install",
+                "--no-install-recommends",
+                ...backportsOpts,
+                "debhelper",
+                "devscripts",
+                "dpkg-dev",
+                "fakeroot",
+                "lintian",
+                "sudo"
+            ])
+            core.endGroup()
+        }
 
         if (INSTALL_BUILD_DEPS) {
             core.startGroup("Installing package build dependencies")
