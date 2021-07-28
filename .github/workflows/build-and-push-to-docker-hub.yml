@@ -10,6 +10,8 @@ env:
   BASE_IMAGE_FOR_LATEST: "buster-backports"
   IMAGE_NAME: "pitop/deb-build-img"
   DEPLOY_BRANCH: "develop"  # TODO: replace with 'master' (note: hard-coded)
+  # PLATFORMS: "linux/amd64,linux/arm64,linux/arm/v7"
+  PLATFORMS: "linux/amd64"  # TODO: re-add all options
 
 jobs:
   build-push-docker-hub:
@@ -69,7 +71,7 @@ jobs:
           # AMD64 - build requires no compilation (architecture: all)
           # ARM   - build requires hardware emulated compilation
           build-args: DEBIAN_BASE_IMAGE=${{ matrix.base_image }}
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: ${{ env.PLATFORMS }}
           push: ${{ github.ref == 'refs/heads/develop' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

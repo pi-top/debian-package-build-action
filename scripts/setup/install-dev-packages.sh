@@ -21,6 +21,9 @@ apt-get update
 echo "Installing tools to get/install APT key..."
 apt-get -y install --no-install-recommends -t "${DEBIAN_BASE_IMAGE}" "${support_packages[@]}"
 
+# TODO: migrate away from apt-key
+# - also for OS build
+# https://www.linuxuprising.com/2021/01/apt-key-is-deprecated-how-to-add.html
 echo "Adding Raspberry Pi's repo..."
 curl -fsSL http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | apt-key add -
 echo "deb [arch=armhf,amd64,arm64] http://archive.raspberrypi.org/debian/ $(lsb_release -cs) main" >/etc/apt/sources.list.d/raspi.list
