@@ -117,6 +117,19 @@ async function main() {
         core.saveState("container", container)
         core.endGroup()
 
+        if (targetArchitecture !== "amd64") {
+            core.startGroup("Package requires emulation - starting tonistiigi/binfmt")
+            await exec.exec("docker", [
+                "run",
+                "--rm",
+                "--privileged",
+                "tonistiigi/binfmt",
+                "--install",
+                "all",
+            ])
+            core.endGroup()
+        }
+
         if (INSTALL_DEPS) {
             core.startGroup("Installing dependencies")
             await exec.exec("docker", [
