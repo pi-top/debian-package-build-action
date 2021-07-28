@@ -7,7 +7,6 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-
 debug_echo() {
   if [[ "${DEBUG}" -eq 1 ]]; then
     echo "$1"
@@ -18,7 +17,7 @@ debug_echo "[install-build-dep] Updating package list..."
 if [[ "${DEBUG}" -eq 1 ]]; then
   sudo apt-get update
 else
-  sudo apt-get update &> /dev/null
+  sudo apt-get update &>/dev/null
 fi
 
 debug_echo "[install-build-dep] Installing build dependencies..."

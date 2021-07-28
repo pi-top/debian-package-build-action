@@ -7,6 +7,8 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
+set -x
+
 # Can probably remove some of these:
 support_packages=("apt-transport-https" "ca-certificates" "curl" "software-properties-common" "gnupg")
 

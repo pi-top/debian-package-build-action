@@ -7,6 +7,8 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
+set -x
+
 repos=(
   "pi-top-Python-SDK"
   "pt-web-portal"

@@ -7,6 +7,8 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
+set -x
+
 NODEREPO="node_16.x"
 
 echo "Adding NodeJS repo..."
