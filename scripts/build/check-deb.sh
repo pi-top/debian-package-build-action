@@ -7,6 +7,7 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
+set -x
 
 debug_echo() {
   if [[ "${DEBUG}" -eq 1 ]]; then
@@ -20,8 +21,8 @@ cd /build
 debug_echo "Checking for .changes file..."
 changes_file="$(find . -name "*.changes" | head -n1)"
 if [[ ! -f "${changes_file}" ]]; then
- echo "ERROR: No .changes file found."
- exit 1
+  echo "ERROR: No .changes file found."
+  exit 1
 fi
 
 if [[ "${LINTIAN_NO_FAIL}" -eq 1 ]]; then
@@ -70,7 +71,7 @@ debug_echo "DEBUG: print LINTIAN_OPTS..."
 debug_echo "${LINTIAN_OPTS}"
 
 debug_echo "Parsing Lintian arguments..."
-IFS=' ' read -ra LINTIAN_OPTS_ARR <<< "$LINTIAN_OPTS"
+IFS=' ' read -ra LINTIAN_OPTS_ARR <<<"$LINTIAN_OPTS"
 
 debug_echo "Running Lintian..."
 lintian "${LINTIAN_OPTS_ARR[@]}" "${changes_file}" | tee "${LINTIAN_LOG_FILE}"
