@@ -135,18 +135,27 @@ async function main() {
                 "-y",
             ])
 
+            let backportsListStdout = "";
+            const backportsListOpts = {}
+            backportsListOpts.listeners = {
+                stdout: (data) => {
+                    backportsListStdout += data.toString();
+                },
+                ignoreReturnCode: true,
+            }
+            backportsListFile="/etc/apt/sources.list.d/backports.list";
+            await exec.exec("docker", [
+                "exec",
+                container,
+                "cat",
+                backportsListFile
+            ], backportsListOpts)
 
-            // TODO: 
-                // # Get dev packages from backports if available
-                // backports_list_file="/etc/apt/sources.list.d/backports.list"
-                // if [[ -f "${backports_list_file}" ]]; then
-                //   backports_repo_name="$(awk '{print $3}' "${backports_list_file}")"
-                //   apt_get_install_opts="${apt_get_install_opts} -t ${backports_repo_name}"
-                // fi
+            backportsOpts = [];
+            if (backportsListStdout === "") {
+                backportsOpts = ["-t", backportsListStdout.split(" ")[3]];
+            }
 
-            // e.g. 'buster-backports' vs 'bullseye'
-            includeBackports = DEBIAN_BASE_IMAGE.includes("-");
-            backportsOpts = includeBackports ? ["-t", DEBIAN_BASE_IMAGE] : [];
             await exec.exec("docker", [
                 "exec",
                 container,
