@@ -9,9 +9,6 @@ async function main() {
     try {
         let container = "deb-builder";
 
-        // TODO: shouldn't be hard-coded
-        let DEBIAN_BASE_IMAGE = "bullseye";
-
         const dockerImage = core.getInput("docker_image") || "debian:stable"
         const sourceRelativeDirectory = core.getInput("source_directory")
         const buildRelativeDirectory = core.getInput("build_directory") || "/tmp/artifacts/bin"
@@ -137,6 +134,15 @@ async function main() {
                 "upgrade",
                 "-y",
             ])
+
+
+            // TODO: 
+                // # Get dev packages from backports if available
+                // backports_list_file="/etc/apt/sources.list.d/backports.list"
+                // if [[ -f "${backports_list_file}" ]]; then
+                //   backports_repo_name="$(awk '{print $3}' "${backports_list_file}")"
+                //   apt_get_install_opts="${apt_get_install_opts} -t ${backports_repo_name}"
+                // fi
 
             // e.g. 'buster-backports' vs 'bullseye'
             includeBackports = DEBIAN_BASE_IMAGE.includes("-");

@@ -19,9 +19,11 @@ dev_packages=("debhelper" "devscripts" "dpkg-dev" "fakeroot" "lintian" "sudo")
 
 apt_get_install_opts="-y install --no-install-recommends"
 
-# Get dev packages from backports if on buster
-if [[ "${DEBIAN_BASE_IMAGE}" == "buster-backports" ]]; then
-  apt_get_install_opts="${apt_get_install_opts} -t ${DEBIAN_BASE_IMAGE}"
+# Get dev packages from backports if available
+backports_list_file="/etc/apt/sources.list.d/backports.list"
+if [[ -f "${backports_list_file}" ]]; then
+  backports_repo_name="$(awk '{print $3}' "${backports_list_file}")"
+  apt_get_install_opts="${apt_get_install_opts} -t ${backports_repo_name}"
 fi
 
 debug_echo "DEBUG: print apt_get_install_opts..."

@@ -3,8 +3,6 @@ ARG DEBIAN_BASE_IMAGE=bullseye
 
 FROM debian:$DEBIAN_BASE_IMAGE
 
-ENV DEBIAN_BASE_IMAGE $DEBIAN_BASE_IMAGE
-
 # Root of source code to build
 VOLUME /src
 # Location of output package build
