@@ -102,8 +102,8 @@ async function main() {
             "--env", "LINTIAN_FAIL_ON_EXPERIMENTAL=" + LINTIAN_FAIL_ON_EXPERIMENTAL,
             "--env", "LINTIAN_FAIL_ON_OVERRIDE=" + LINTIAN_FAIL_ON_OVERRIDE,
             "--env", "LINTIAN_NO_FAIL=" + LINTIAN_NO_FAIL,
-            "--env", "DPKG_BUILDPACKAGE_OPTS=" + DPKG_BUILDPACKAGE_OPTS,
-            "--env", "LINTIAN_OPTS=" + LINTIAN_OPTS,
+            "--env", "DPKG_BUILDPACKAGE_OPTS='" + DPKG_BUILDPACKAGE_OPTS + "'",
+            "--env", "LINTIAN_OPTS='" + LINTIAN_OPTS + "'",
             "--env", "DEBIAN_FRONTEND=noninteractive",
             dockerImage,
             "sleep", "inf"
