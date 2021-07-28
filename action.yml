@@ -7,7 +7,7 @@ inputs:
   docker_image:
     description: name of the docker image used to build the package
     required: false
-    default: 'pitop/deb-build-img:bullseye-develop'
+    default: 'debian:stable'
   source_directory:
     description: path to the directory where the source of the package is located
     required: false

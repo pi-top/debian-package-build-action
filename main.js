@@ -10,7 +10,7 @@ async function main() {
         let container = "deb-builder";
         let DEBIAN_BASE_IMAGE = "bullseye";
 
-        const dockerImage = core.getInput("docker_image") || "pitop/deb-build-img:bullseye-develop"
+        const dockerImage = core.getInput("docker_image") || "debian:stable"
         const sourceRelativeDirectory = core.getInput("source_directory")
         const buildRelativeDirectory = core.getInput("build_directory") || "/tmp/artifacts/bin"
         const targetArchitecture = core.getInput("target_architecture") || "amd64"
