@@ -1,4 +1,5 @@
 ARG DEBIAN_BASE_IMAGE=bullseye
+# Supported: 'buster-backports', 'bullseye' and onwards
 
 FROM debian:$DEBIAN_BASE_IMAGE
 

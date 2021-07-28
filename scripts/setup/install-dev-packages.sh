@@ -7,6 +7,8 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
+set -x
+
 debug_echo() {
   if [[ "${DEBUG}" -eq 1 ]]; then
     echo "[build-deb] $1"
@@ -16,8 +18,9 @@ debug_echo() {
 dev_packages=("debhelper" "devscripts" "dpkg-dev" "fakeroot" "lintian" "sudo")
 
 apt_get_install_opts="-y install --no-install-recommends"
-# e.g. 'buster-backports' vs 'bullseye'
-if [[ "${DEBIAN_BASE_IMAGE}" == *"-"* ]]; then
+
+# Get dev packages from backports if on buster
+if [[ "${DEBIAN_BASE_IMAGE}" == "buster-backports" ]]; then
   apt_get_install_opts="${apt_get_install_opts} -t ${DEBIAN_BASE_IMAGE}"
 fi
 
