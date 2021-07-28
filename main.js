@@ -152,8 +152,6 @@ async function main() {
             ], backportsListOpts)
 
             backportsOpts = [];
-            console.log(backportsListStdout);
-            console.log(backportsListStdout.trim().split(" "));
             if (backportsListStdout !== "") {
                 backportsOpts = ["-t", backportsListStdout.trim().split(" ")[2]];
             }
