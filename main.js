@@ -152,7 +152,7 @@ async function main() {
             ], backportsListOpts)
 
             backportsOpts = [];
-            if (backportsListStdout === "") {
+            if (backportsListStdout !== "") {
                 backportsOpts = ["-t", backportsListStdout.split(" ")[3]];
             }
 
