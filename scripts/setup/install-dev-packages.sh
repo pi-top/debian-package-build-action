@@ -7,6 +7,12 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
+debug_echo() {
+  if [[ "${DEBUG}" -eq 1 ]]; then
+    echo "[build-deb] $1"
+  fi
+}
+
 dev_packages=("debhelper" "devscripts" "dpkg-dev" "fakeroot" "lintian" "sudo")
 
 apt_get_install_opts="-y install --no-install-recommends"
