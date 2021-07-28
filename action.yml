@@ -101,11 +101,11 @@ inputs:
   DPKG_BUILDPACKAGE_OPTS:
     description: ""
     required: false
-    default: "
+    default: ""
   LINTIAN_OPTS:
     description: ""
     required: false
-    default: "
+    default: ""
 
 runs:
   using: node12
