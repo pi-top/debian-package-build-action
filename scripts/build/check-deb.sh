@@ -7,6 +7,8 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
+set -x
+
 debug_echo() {
   if [[ "${DEBUG}" -eq 1 ]]; then
     echo "[check-deb] $1"
