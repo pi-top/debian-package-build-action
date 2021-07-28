@@ -8,7 +8,7 @@ on:
 
 env:
   BASE_IMAGE_FOR_LATEST: "buster-backports"
-  IMAGE_NAME: "pitop/deb-build"
+  IMAGE_NAME: "pitop/pi-top-os-deb-build"
   PLATFORMS: "linux/amd64,linux/arm64,linux/arm/v7"
 
 jobs:
