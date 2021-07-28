@@ -9,14 +9,6 @@ IFS=$'\n\t'
 
 NODEREPO="node_16.x"
 
-# Can probably remove some of these:
-support_packages=("apt-transport-https" "ca-certificates" "curl" "software-properties-common" "gnupg")
-
-dev_packages=("debhelper" "devscripts" "dpkg-dev" "fakeroot" "lintian" "sudo")
-
-# Tell apt-get we're never going to be able to give manual feedback
-export DEBIAN_FRONTEND=noninteractive
-
 echo "Adding NodeJS repo..."
 curl -fsSLk https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
 

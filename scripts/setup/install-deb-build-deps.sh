@@ -20,9 +20,6 @@ arm_only_repos=(
   "web-renderer"
 )
 
-# Tell apt-get we're never going to be able to give manual feedback
-export DEBIAN_FRONTEND=noninteractive
-
 # Update the package listing with newly added sources
 apt-get update
 
