@@ -8,6 +8,8 @@ const fs = require("fs")
 async function main() {
     try {
         let container = "deb-builder";
+
+        // TODO: shouldn't be hard-coded
         let DEBIAN_BASE_IMAGE = "bullseye";
 
         const dockerImage = core.getInput("docker_image") || "debian:stable"

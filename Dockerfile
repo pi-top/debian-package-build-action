@@ -78,8 +78,8 @@ COPY  scripts/setup/install-nodejs-from-nodesource.sh /.install-nodejs-from-node
 RUN /.install-nodejs-from-nodesource
 
 # Install build dependency packages
-COPY  scripts/setup/install-deb-build-deps.sh /.install-deb-build-deps
-RUN /.install-deb-build-deps
+COPY  scripts/setup/preinstall-deb-build-deps.sh /.preinstall-deb-build-deps.sh
+# RUN /.preinstall-deb-build-deps.sh
 
 # Add a user with userid 1000 and name nonroot
 RUN useradd --create-home -u 1000 nonroot
