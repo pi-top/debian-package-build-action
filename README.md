@@ -1,61 +1,39 @@
-# pi-top Docker-based Debian package builder
+# Docker-based Debian package build Github Action
 
-This repository builds pi-top's `deb-build` image, used across [pi-top's code base](https://github.com/pi-top/) to create Debian packages for Raspberry Pi.
+Build a Debian package for a target architecture.
+See `action.yml` for how to use.
 
-### How to use
+## Example
 
-As a GitHub Action, start Docker container based on source code's architecture:
+### Select Correct Target Architecture To Build A Package for ARM (e.g. Raspberry Pi)
+If `debian/control` has its `Architecture:` field set to `all`, then it does not
+require any architecture-specific features of the host machine. This means that
+`amd64` should be used. In all other cases, `armhf` should be used.
+
+
 ```
-      - name: Build Debian package
+      - name: Determine architecture to use from package info
         run: |
-          platform="linux/amd64"
+          target_architecture=amd64
           if grep '^Architecture:' debian/control | grep -q -v 'all'; then
-            echo "Package requires emulation - starting binfmt"
-            docker run --privileged --rm docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
-            platform="linux/arm/v7,linux/arm64"
+            target_architecture=armhf
           fi
-          mkdir -p /tmp/artifacts/{src,bin}
-          docker run --rm \
-            --volume ${{ github.workspace }}:/src \
-            --volume /tmp/artifacts/bin:/build \
-            --platform="${platform}" \
-            -e LINTIAN_TAGS_TO_SUPPRESS="debian-changelog-line-too-long,spelling-error-in-changelog,unreleased-changelog-distribution" \
-            pitop/deb-build:latest
+          echo "TARGET_ARCHITECTURE=${target_architecture}" >> $GITHUB_ENV
+
+      - name: Build Debian package
+        uses: pi-top/debian-package-build-action@master
+        with:
+          target_architecture: ${{ env.TARGET_ARCHITECTURE }}
+          docker_image: debian:stable
+          build_directory: artifacts
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: deb
+          path: artifacts/*.deb
 ```
 
-### Environment Variables
-
-The following environment variables can be overriden to change the behaviour:
-
-```sh
-# Stages - boolean
-DEBUG=0
-INSTALL_BUILD_DEPS=1
-BUILD=1
-CHECK=1
-# Build configuration
-DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=0
-DPKG_BUILDPACKAGE_POST_CLEAN=0
-# Quality check configuration - comma-separated lists
-LINTIAN_DONT_CHECK_PARTS="nmu"
-LINTIAN_TAGS_TO_SUPPRESS=""
-# Quality check configuration - boolean
-LINTIAN_DISPLAY_INFO=1
-LINTIAN_SHOW_OVERRIDES=1
-LINTIAN_TAG_DISPLAY_LIMIT=0
-# LINTIAN_NO_FAIL overrides all others
-LINTIAN_FAIL_ON_ERROR=1
-LINTIAN_FAIL_ON_WARNING=1
-LINTIAN_FAIL_ON_INFO=0
-LINTIAN_FAIL_ON_PEDANTIC=0
-LINTIAN_FAIL_ON_EXPERIMENTAL=0
-LINTIAN_FAIL_ON_OVERRIDE=0
-LINTIAN_NO_FAIL=0
-# Additional options
-DPKG_BUILDPACKAGE_OPTS=""
-LINTIAN_OPTS=""
-```
-
-## Featured Repositories
-
-[pi-top Python SDK](https://github.com/pi-top/pi-top-Python-SDK)
+In addition to this action, this repository contains the Dockerfile and associated scripts
+for creating a custom base Docker image for pi-topOS builds.
+This contains additional repositories, Node.JS v16, and some pre-installed build dependencies used for pi-topOS packages for speed.
