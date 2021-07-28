@@ -1,6 +1,11 @@
 name: Docker Build
 
-on: push
+on:
+  push:
+    paths:
+      - "Dockerfile"
+      - "scripts/**"
+      - ".github/workflows/docker-build.yml"
 
 env:
   BASE_IMAGE_FOR_LATEST: "buster-backports"
