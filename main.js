@@ -152,8 +152,10 @@ async function main() {
             ], backportsListOpts)
 
             backportsOpts = [];
+            console.log(backportsListStdout);
+            console.log(backportsListStdout.trim().split(" "));
             if (backportsListStdout !== "") {
-                backportsOpts = ["-t", backportsListStdout.split(" ")[3]];
+                backportsOpts = ["-t", backportsListStdout.trim().split(" ")[2]];
             }
 
             await exec.exec("docker", [
