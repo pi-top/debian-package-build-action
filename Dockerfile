@@ -69,15 +69,13 @@ ENV FORCE_UNSAFE_CONFIGURE=1
 COPY  scripts/setup/install-dev-packages.sh /.install-dev-packages
 RUN /.install-dev-packages
 
-# Disabled so that builds will be faster for testing
-
 # Install Node.js from Nodesource
-#COPY  scripts/setup/install-nodejs-from-nodesource.sh /.install-nodejs-from-nodesource
-#RUN /.install-nodejs-from-nodesource
+COPY  scripts/setup/install-nodejs-from-nodesource.sh /.install-nodejs-from-nodesource
+RUN /.install-nodejs-from-nodesource
 
 # Install build dependency packages
-#COPY  scripts/setup/install-deb-build-deps.sh /.install-deb-build-deps
-#RUN /.install-deb-build-deps
+COPY  scripts/setup/install-deb-build-deps.sh /.install-deb-build-deps
+RUN /.install-deb-build-deps
 
 # Add a user with userid 1000 and name nonroot
 RUN useradd --create-home -u 1000 nonroot
