@@ -1,0 +1,117 @@
+name: Debian package builder
+description: Build a debian package 
+branding:
+  color: green
+  icon: package
+inputs:
+  docker_image:
+    description: name of the docker image used to build the package
+    required: false
+    default: 'debian:stable'
+  source_directory:
+    description: path to the directory where the source of the package is located
+    required: false
+    default: './'
+  build_directory:
+    description: path to the directory where the build artifacts will be placed
+    required: false
+    default: '/artifacts'
+  target_architecture:
+    description: package target architecture
+    required: false
+    default: 'amd64'
+  # Stages
+  DEBUG:
+    description: Display debug information while building
+    required: false
+    default: '0'
+  INSTALL_DEPS:
+    description: Install dependencies
+    required: false
+    default: '1'
+  INSTALL_BUILD_DEPS:
+    description: Install package build dependencies
+    required: false
+    default: '1'
+  BUILD:
+    description: If 'true', builds the package
+    required: false
+    default: '1'
+  CHECK:
+    description: If 'true', checks the built package with lintian
+    required: false
+    default: '1'
+  # Build configuration
+  DPKG_BUILDPACKAGE_CHECK_BUILDDEPS:
+    description: ''
+    required: false
+    default: '0'
+  DPKG_BUILDPACKAGE_POST_CLEAN:
+    description: ''
+    required: false
+    default: '0'
+  # Quality check configuration - comma-separated lists
+  LINTIAN_DONT_CHECK_PARTS:
+    description: ''
+    required: false
+    default: 'nmu'
+  LINTIAN_TAGS_TO_SUPPRESS:
+    description: ''
+    required: false
+    default: 'initial-upload-closes-no-bugs,debian-watch-file-is-missing'
+  # Quality check configuration - boolean
+  LINTIAN_DISPLAY_INFO:
+    description: ''
+    required: false
+    default: '1'
+  LINTIAN_SHOW_OVERRIDES:
+    description: ''
+    required: false
+    default: '1'
+  LINTIAN_TAG_DISPLAY_LIMIT:
+    description: ''
+    required: false
+    default: '0'
+  # LINTIAN_NO_FAIL overrides all others
+  LINTIAN_FAIL_ON_ERROR:
+    description: ''
+    required: false
+    default: '1'
+  LINTIAN_FAIL_ON_WARNING:
+    description: ''
+    required: false
+    default: '1'
+  LINTIAN_FAIL_ON_INFO:
+    description: ''
+    required: false
+    default: '0'
+  LINTIAN_FAIL_ON_PEDANTIC:
+    description: ''
+    required: false
+    default: '0'
+  LINTIAN_FAIL_ON_EXPERIMENTAL:
+    description: ''
+    required: false
+    default: '0'
+  LINTIAN_FAIL_ON_OVERRIDE:
+    description: ''
+    required: false
+    default: '0'
+  LINTIAN_NO_FAIL:
+    description: ''
+    required: false
+    default: '0'
+  # Additional options
+  DPKG_BUILDPACKAGE_OPTS:
+    description: ''
+    required: false
+    default: ''
+  LINTIAN_OPTS:
+    description: ''
+    required: false
+    default: ''
+
+runs:
+  using: node12
+  main: main.js
+  post: post.js
