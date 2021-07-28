@@ -189,7 +189,7 @@ async function main() {
             await exec.exec("docker", [
                 "exec",
                 container,
-                "/check-deb"
+                "bash", "-x", "/check-deb"
             ])
             core.endGroup()
         }
