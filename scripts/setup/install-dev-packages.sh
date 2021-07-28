@@ -7,39 +7,25 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-# Can probably remove some of these:
-support_packages=("apt-transport-https" "ca-certificates" "curl" "software-properties-common" "gnupg")
-
 dev_packages=("debhelper" "devscripts" "dpkg-dev" "fakeroot" "lintian" "sudo")
 
-# Tell apt-get we're never going to be able to give manual feedback
-export DEBIAN_FRONTEND=noninteractive
+apt_get_install_opts="-y install --no-install-recommends"
+# e.g. 'buster-backports' vs 'bullseye'
+if [[ "${DEBIAN_BASE_IMAGE}" == *"-"* ]]; then
+  apt_get_install_opts="${apt_get_install_opts} -t ${DEBIAN_BASE_IMAGE}"
+fi
+
+debug_echo "DEBUG: print apt_get_install_opts..."
+debug_echo "${apt_get_install_opts}"
+
+debug_echo "Parsing apt-get arguments..."
+IFS=' ' read -ra apt_get_install_opts_arr <<<"$apt_get_install_opts"
 
 echo "Updating package list..."
 apt-get update
-
-echo "Installing tools to get/install APT key..."
-apt-get -y install --no-install-recommends -t "${DEBIAN_BASE_IMAGE}" "${support_packages[@]}"
-
-# TODO: migrate away from apt-key
-# - also for OS build
-# https://www.linuxuprising.com/2021/01/apt-key-is-deprecated-how-to-add.html
-echo "Adding Raspberry Pi's repo..."
-curl -fsSL http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | apt-key add -
-echo "deb [arch=armhf,amd64,arm64] http://archive.raspberrypi.org/debian/ $(lsb_release -cs) main" >/etc/apt/sources.list.d/raspi.list
-
-echo "Adding pi-top's repo..."
-curl --insecure https://apt.pi-top.com/pt-apt.asc | apt-key add
-echo "deb [arch=armhf,amd64,arm64] http://apt.pi-top.com/pi-top-os sirius main contrib non-free" >/etc/apt/sources.list.d/pi-top.list
-
-echo "Updating package list..."
-apt-get update
-
-echo "Installing security updates..."
-apt-get -y upgrade
 
 echo "Installing new packages, without unnecessary recommended packages..."
-apt-get -y install --no-install-recommends -t "${DEBIAN_BASE_IMAGE}" "${dev_packages[@]}"
+apt-get "${apt_get_install_opts_arr[@]}" "${dev_packages[@]}"
 
 echo "Deleting cached files we don't need anymore..."
 apt-get clean

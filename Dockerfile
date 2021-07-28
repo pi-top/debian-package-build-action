@@ -65,6 +65,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV DPKG_COLORS=always
 ENV FORCE_UNSAFE_CONFIGURE=1
 
+# Add additional repos
+COPY  scripts/setup/add-additional-repos.sh /.add-additional-repos
+RUN /.add-additional-repos
+
 # Install dev packages
 COPY  scripts/setup/install-dev-packages.sh /.install-dev-packages
 RUN /.install-dev-packages
