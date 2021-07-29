@@ -76,6 +76,21 @@ async function main() {
         console.log(details)
         core.endGroup()
 
+        let platform = "linux/amd64";
+        if (targetArchitecture !== "amd64") {
+            core.startGroup("Package requires emulation - starting tonistiigi/binfmt")
+            platform = "linux/arm/v7";
+            await exec.exec("docker", [
+                "run",
+                "--rm",
+                "--privileged",
+                "tonistiigi/binfmt",
+                "--install",
+                "all",
+            ])
+            core.endGroup()
+        }
+
         core.startGroup("Create container")
         await exec.exec("docker", [
             "create",
@@ -104,6 +119,7 @@ async function main() {
             "--env", "LINTIAN_NO_FAIL=" + LINTIAN_NO_FAIL,
             "--env", "DPKG_BUILDPACKAGE_OPTS=" + DPKG_BUILDPACKAGE_OPTS,
             "--env", "LINTIAN_OPTS=" + LINTIAN_OPTS,
+            "--platform", platform,
             dockerImage,
             "sleep", "inf"
         ])
