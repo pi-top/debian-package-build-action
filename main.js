@@ -97,33 +97,30 @@ async function main() {
 
         core.startGroup("Create container")
 
-        envOpts = {}
-
-        buildEnvList.forEach((buildEnvEntr) => {
-            envOpts.push("--env")
-            envOpts.push(buildEnvVar)
-        })
-
-        envOpts.push("--env").push("DEBUG=" + DEBUG)
-        envOpts.push("--env").push("INSTALL_BUILD_DEPS=" + INSTALL_BUILD_DEPS)
-        envOpts.push("--env").push("BUILD=" + BUILD)
-        envOpts.push("--env").push("CHECK=" + CHECK)
-        envOpts.push("--env").push("DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=" + DPKG_BUILDPACKAGE_CHECK_BUILDDEPS)
-        envOpts.push("--env").push("DPKG_BUILDPACKAGE_POST_CLEAN=" + DPKG_BUILDPACKAGE_POST_CLEAN)
-        envOpts.push("--env").push("LINTIAN_DONT_CHECK_PARTS=" + LINTIAN_DONT_CHECK_PARTS)
-        envOpts.push("--env").push("LINTIAN_TAGS_TO_SUPPRESS=" + LINTIAN_TAGS_TO_SUPPRESS)
-        envOpts.push("--env").push("LINTIAN_DISPLAY_INFO=" + LINTIAN_DISPLAY_INFO)
-        envOpts.push("--env").push("LINTIAN_SHOW_OVERRIDES=" + LINTIAN_SHOW_OVERRIDES)
-        envOpts.push("--env").push("LINTIAN_TAG_DISPLAY_LIMIT=" + LINTIAN_TAG_DISPLAY_LIMIT)
-        envOpts.push("--env").push("LINTIAN_FAIL_ON_ERROR=" + LINTIAN_FAIL_ON_ERROR)
-        envOpts.push("--env").push("LINTIAN_FAIL_ON_WARNING=" + LINTIAN_FAIL_ON_WARNING)
-        envOpts.push("--env").push("LINTIAN_FAIL_ON_INFO=" + LINTIAN_FAIL_ON_INFO)
-        envOpts.push("--env").push("LINTIAN_FAIL_ON_PEDANTIC=" + LINTIAN_FAIL_ON_PEDANTIC)
-        envOpts.push("--env").push("LINTIAN_FAIL_ON_EXPERIMENTAL=" + LINTIAN_FAIL_ON_EXPERIMENTAL)
-        envOpts.push("--env").push("LINTIAN_FAIL_ON_OVERRIDE=" + LINTIAN_FAIL_ON_OVERRIDE)
-        envOpts.push("--env").push("LINTIAN_NO_FAIL=" + LINTIAN_NO_FAIL)
-        envOpts.push("--env").push("DPKG_BUILDPACKAGE_OPTS=" + DPKG_BUILDPACKAGE_OPTS)
-        envOpts.push("--env").push("LINTIAN_OPTS=" + LINTIAN_OPTS)
+        const envs = [
+          ...buildEnvList,
+          "DEBUG=" + DEBUG,
+          "INSTALL_BUILD_DEPS=" + INSTALL_BUILD_DEPS,
+          "BUILD=" + BUILD,
+          "CHECK=" + CHECK,
+          "DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=" + DPKG_BUILDPACKAGE_CHECK_BUILDDEPS,
+          "DPKG_BUILDPACKAGE_POST_CLEAN=" + DPKG_BUILDPACKAGE_POST_CLEAN,
+          "LINTIAN_DONT_CHECK_PARTS=" + LINTIAN_DONT_CHECK_PARTS,
+          "LINTIAN_TAGS_TO_SUPPRESS=" + LINTIAN_TAGS_TO_SUPPRESS,
+          "LINTIAN_DISPLAY_INFO=" + LINTIAN_DISPLAY_INFO,
+          "LINTIAN_SHOW_OVERRIDES=" + LINTIAN_SHOW_OVERRIDES,
+          "LINTIAN_TAG_DISPLAY_LIMIT=" + LINTIAN_TAG_DISPLAY_LIMIT,
+          "LINTIAN_FAIL_ON_ERROR=" + LINTIAN_FAIL_ON_ERROR,
+          "LINTIAN_FAIL_ON_WARNING=" + LINTIAN_FAIL_ON_WARNING,
+          "LINTIAN_FAIL_ON_INFO=" + LINTIAN_FAIL_ON_INFO,
+          "LINTIAN_FAIL_ON_PEDANTIC=" + LINTIAN_FAIL_ON_PEDANTIC,
+          "LINTIAN_FAIL_ON_EXPERIMENTAL=" + LINTIAN_FAIL_ON_EXPERIMENTAL,
+          "LINTIAN_FAIL_ON_OVERRIDE=" + LINTIAN_FAIL_ON_OVERRIDE,
+          "LINTIAN_NO_FAIL=" + LINTIAN_NO_FAIL,
+          "DPKG_BUILDPACKAGE_OPTS=" + DPKG_BUILDPACKAGE_OPTS,
+          "LINTIAN_OPTS=" + LINTIAN_OPTS,
+        ]
+        const envOpts = envs.reduce((opts, env) => [...opts, "--env", env], [])
 
         await exec.exec("docker", [
             "create",
