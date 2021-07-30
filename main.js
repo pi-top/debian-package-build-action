@@ -175,11 +175,10 @@ async function main() {
                 },
                 ignoreReturnCode: true,
             }
-            backportsListFile="/etc/apt/sources.list.d/backports.list";
             await exec.exec("docker", [
                 "exec",
                 container,
-                "cat", backportsListFile,
+                "cat", "/etc/apt/sources.list.d/backports.list",
             ], backportsListOpts)
 
             backportsOpts = [];
