@@ -24,6 +24,10 @@ inputs:
     description: 'Additional environment variables for the build'
     required: false
     default: ''
+  additional_env_delimiter:
+    description: 'Line delimiter used to separate variables defined in `aditional_env`'
+    required: false
+    default: '\n'
   # Stages
   DEBUG:
     description: Display debug information while building

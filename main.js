@@ -10,7 +10,8 @@ async function main() {
         let container = "deb-builder";
 
         const buildEnvStr = core.getInput("additional_env") || ""
-        const buildEnvList = buildEnvStr.split("\n").filter(x => x !== "")
+        const newLineDelimiter = core.getInput("additional_env_delimiter") || "\n"
+        const buildEnvList = buildEnvStr.split(newLineDelimiter).filter(x => x !== "")
 
         const dockerImage = core.getInput("docker_image") || "debian:stable"
         const sourceRelativeDirectory = core.getInput("source_directory")
