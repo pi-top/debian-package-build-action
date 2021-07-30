@@ -110,6 +110,10 @@ inputs:
     description: ''
     required: false
     default: ''
+  build_env:
+    description: 'Additional environment variables for the build'
+    required: false
+    default: ''
 
 runs:
   using: node12

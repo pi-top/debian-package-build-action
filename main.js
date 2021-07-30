@@ -9,6 +9,9 @@ async function main() {
     try {
         let container = "deb-builder";
 
+        const buildEnvStr = core.getInput("build_env") || ""
+        const buildEnvList = buildEnvStr.split("\n").filter(x => x !== "")
+
         const dockerImage = core.getInput("docker_image") || "debian:stable"
         const sourceRelativeDirectory = core.getInput("source_directory")
         const buildRelativeDirectory = core.getInput("build_directory") || "/tmp/artifacts/bin"
@@ -91,6 +94,35 @@ async function main() {
             core.endGroup()
         }
 
+        core.startGroup("Create env file")
+        envOpts = {}
+
+        // Add each build env
+        for (let i = 0; i < buildEnvList.length; i++) {
+            envOpts.push("--env").push(buildEnvList[i])
+        }
+        envOpts.push("--env").push("DEBUG=" + DEBUG)
+        envOpts.push("--env").push("INSTALL_BUILD_DEPS=" + INSTALL_BUILD_DEPS)
+        envOpts.push("--env").push("BUILD=" + BUILD)
+        envOpts.push("--env").push("CHECK=" + CHECK)
+        envOpts.push("--env").push("DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=" + DPKG_BUILDPACKAGE_CHECK_BUILDDEPS)
+        envOpts.push("--env").push("DPKG_BUILDPACKAGE_POST_CLEAN=" + DPKG_BUILDPACKAGE_POST_CLEAN)
+        envOpts.push("--env").push("LINTIAN_DONT_CHECK_PARTS=" + LINTIAN_DONT_CHECK_PARTS)
+        envOpts.push("--env").push("LINTIAN_TAGS_TO_SUPPRESS=" + LINTIAN_TAGS_TO_SUPPRESS)
+        envOpts.push("--env").push("LINTIAN_DISPLAY_INFO=" + LINTIAN_DISPLAY_INFO)
+        envOpts.push("--env").push("LINTIAN_SHOW_OVERRIDES=" + LINTIAN_SHOW_OVERRIDES)
+        envOpts.push("--env").push("LINTIAN_TAG_DISPLAY_LIMIT=" + LINTIAN_TAG_DISPLAY_LIMIT)
+        envOpts.push("--env").push("LINTIAN_FAIL_ON_ERROR=" + LINTIAN_FAIL_ON_ERROR)
+        envOpts.push("--env").push("LINTIAN_FAIL_ON_WARNING=" + LINTIAN_FAIL_ON_WARNING)
+        envOpts.push("--env").push("LINTIAN_FAIL_ON_INFO=" + LINTIAN_FAIL_ON_INFO)
+        envOpts.push("--env").push("LINTIAN_FAIL_ON_PEDANTIC=" + LINTIAN_FAIL_ON_PEDANTIC)
+        envOpts.push("--env").push("LINTIAN_FAIL_ON_EXPERIMENTAL=" + LINTIAN_FAIL_ON_EXPERIMENTAL)
+        envOpts.push("--env").push("LINTIAN_FAIL_ON_OVERRIDE=" + LINTIAN_FAIL_ON_OVERRIDE)
+        envOpts.push("--env").push("LINTIAN_NO_FAIL=" + LINTIAN_NO_FAIL)
+        envOpts.push("--env").push("DPKG_BUILDPACKAGE_OPTS=" + DPKG_BUILDPACKAGE_OPTS)
+        envOpts.push("--env").push("LINTIAN_OPTS=" + LINTIAN_OPTS)
+        core.endGroup()
+
         core.startGroup("Create container")
         await exec.exec("docker", [
             "create",
@@ -99,26 +131,7 @@ async function main() {
             "--workdir=/src",
             "--volume", buildDirectory + ":/build",
             "--tty",
-            "--env", "DEBUG=" + DEBUG,
-            "--env", "INSTALL_BUILD_DEPS=" + INSTALL_BUILD_DEPS,
-            "--env", "BUILD=" + BUILD,
-            "--env", "CHECK=" + CHECK,
-            "--env", "DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=" + DPKG_BUILDPACKAGE_CHECK_BUILDDEPS,
-            "--env", "DPKG_BUILDPACKAGE_POST_CLEAN=" + DPKG_BUILDPACKAGE_POST_CLEAN,
-            "--env", "LINTIAN_DONT_CHECK_PARTS=" + LINTIAN_DONT_CHECK_PARTS,
-            "--env", "LINTIAN_TAGS_TO_SUPPRESS=" + LINTIAN_TAGS_TO_SUPPRESS,
-            "--env", "LINTIAN_DISPLAY_INFO=" + LINTIAN_DISPLAY_INFO,
-            "--env", "LINTIAN_SHOW_OVERRIDES=" + LINTIAN_SHOW_OVERRIDES,
-            "--env", "LINTIAN_TAG_DISPLAY_LIMIT=" + LINTIAN_TAG_DISPLAY_LIMIT,
-            "--env", "LINTIAN_FAIL_ON_ERROR=" + LINTIAN_FAIL_ON_ERROR,
-            "--env", "LINTIAN_FAIL_ON_WARNING=" + LINTIAN_FAIL_ON_WARNING,
-            "--env", "LINTIAN_FAIL_ON_INFO=" + LINTIAN_FAIL_ON_INFO,
-            "--env", "LINTIAN_FAIL_ON_PEDANTIC=" + LINTIAN_FAIL_ON_PEDANTIC,
-            "--env", "LINTIAN_FAIL_ON_EXPERIMENTAL=" + LINTIAN_FAIL_ON_EXPERIMENTAL,
-            "--env", "LINTIAN_FAIL_ON_OVERRIDE=" + LINTIAN_FAIL_ON_OVERRIDE,
-            "--env", "LINTIAN_NO_FAIL=" + LINTIAN_NO_FAIL,
-            "--env", "DPKG_BUILDPACKAGE_OPTS=" + DPKG_BUILDPACKAGE_OPTS,
-            "--env", "LINTIAN_OPTS=" + LINTIAN_OPTS,
+            ...envOpts,
             "--platform", platform,
             dockerImage,
             "sleep", "inf"
