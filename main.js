@@ -168,12 +168,12 @@ async function main() {
             ])
 
             let backportsListStdout = "";
-            const backportsListOpts = {}
+            const backportsListOpts = {};
+            backportsListOpts.ignoreReturnCode = true;
             backportsListOpts.listeners = {
                 stdout: (data) => {
                     backportsListStdout += data.toString();
-                },
-                ignoreReturnCode: true,
+                }
             }
             await exec.exec("docker", [
                 "exec",
