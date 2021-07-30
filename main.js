@@ -182,8 +182,13 @@ async function main() {
             await exec.exec("docker", [
                 "exec",
                 container,
-                "cat",
-                backportsListFile
+                "sh",
+                "-c",
+                "'",
+                    "test","-f", backportsListFile,
+                    "&&",
+                    "cat", backportsListFile,
+               "'",
             ], backportsListOpts)
 
             backportsOpts = [];
