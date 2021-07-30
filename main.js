@@ -97,10 +97,9 @@ async function main() {
 
         core.startGroup("Create container")
 
-        envOpts = {}
+        envOpts = Array()
+        buildEnvList.map(buildEnvVar => {envOpts.push("--env"); envOpts.push(buildEnvVar)});
 
-        buildEnvList.forEach((buildEnv) => envOpts.push("--env").push(buildEnv))
-        
         envOpts.push("--env").push("DEBUG=" + DEBUG)
         envOpts.push("--env").push("INSTALL_BUILD_DEPS=" + INSTALL_BUILD_DEPS)
         envOpts.push("--env").push("BUILD=" + BUILD)
