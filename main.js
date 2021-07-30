@@ -184,7 +184,7 @@ async function main() {
                 container,
                 "sh",
                 "-c",
-                "test -f" + backportsListFile + "&& cat " + backportsListFile,
+                "test -f" + backportsListFile + " && cat " + backportsListFile,
             ], backportsListOpts)
 
             backportsOpts = [];
