@@ -20,6 +20,10 @@ inputs:
     description: package target architecture
     required: false
     default: 'amd64'
+  additional_env:
+    description: 'Additional environment variables for the build'
+    required: false
+    default: ''
   # Stages
   DEBUG:
     description: Display debug information while building

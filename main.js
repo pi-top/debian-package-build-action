@@ -9,6 +9,9 @@ async function main() {
     try {
         let container = "deb-builder";
 
+        const buildEnvStr = core.getInput("additional_env") || ""
+        const buildEnvList = buildEnvStr.split("\n").filter(x => x !== "")
+
         const dockerImage = core.getInput("docker_image") || "debian:stable"
         const sourceRelativeDirectory = core.getInput("source_directory")
         const buildRelativeDirectory = core.getInput("build_directory") || "/tmp/artifacts/bin"
@@ -91,7 +94,34 @@ async function main() {
             core.endGroup()
         }
 
+
         core.startGroup("Create container")
+
+        const envs = [
+          ...buildEnvList,
+          "DEBUG=" + DEBUG,
+          "INSTALL_BUILD_DEPS=" + INSTALL_BUILD_DEPS,
+          "BUILD=" + BUILD,
+          "CHECK=" + CHECK,
+          "DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=" + DPKG_BUILDPACKAGE_CHECK_BUILDDEPS,
+          "DPKG_BUILDPACKAGE_POST_CLEAN=" + DPKG_BUILDPACKAGE_POST_CLEAN,
+          "LINTIAN_DONT_CHECK_PARTS=" + LINTIAN_DONT_CHECK_PARTS,
+          "LINTIAN_TAGS_TO_SUPPRESS=" + LINTIAN_TAGS_TO_SUPPRESS,
+          "LINTIAN_DISPLAY_INFO=" + LINTIAN_DISPLAY_INFO,
+          "LINTIAN_SHOW_OVERRIDES=" + LINTIAN_SHOW_OVERRIDES,
+          "LINTIAN_TAG_DISPLAY_LIMIT=" + LINTIAN_TAG_DISPLAY_LIMIT,
+          "LINTIAN_FAIL_ON_ERROR=" + LINTIAN_FAIL_ON_ERROR,
+          "LINTIAN_FAIL_ON_WARNING=" + LINTIAN_FAIL_ON_WARNING,
+          "LINTIAN_FAIL_ON_INFO=" + LINTIAN_FAIL_ON_INFO,
+          "LINTIAN_FAIL_ON_PEDANTIC=" + LINTIAN_FAIL_ON_PEDANTIC,
+          "LINTIAN_FAIL_ON_EXPERIMENTAL=" + LINTIAN_FAIL_ON_EXPERIMENTAL,
+          "LINTIAN_FAIL_ON_OVERRIDE=" + LINTIAN_FAIL_ON_OVERRIDE,
+          "LINTIAN_NO_FAIL=" + LINTIAN_NO_FAIL,
+          "DPKG_BUILDPACKAGE_OPTS=" + DPKG_BUILDPACKAGE_OPTS,
+          "LINTIAN_OPTS=" + LINTIAN_OPTS,
+        ]
+        const envOpts = envs.reduce((opts, env) => [...opts, "--env", env], [])
+
         await exec.exec("docker", [
             "create",
             "--name", container,
@@ -99,26 +129,7 @@ async function main() {
             "--workdir=/src",
             "--volume", buildDirectory + ":/build",
             "--tty",
-            "--env", "DEBUG=" + DEBUG,
-            "--env", "INSTALL_BUILD_DEPS=" + INSTALL_BUILD_DEPS,
-            "--env", "BUILD=" + BUILD,
-            "--env", "CHECK=" + CHECK,
-            "--env", "DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=" + DPKG_BUILDPACKAGE_CHECK_BUILDDEPS,
-            "--env", "DPKG_BUILDPACKAGE_POST_CLEAN=" + DPKG_BUILDPACKAGE_POST_CLEAN,
-            "--env", "LINTIAN_DONT_CHECK_PARTS=" + LINTIAN_DONT_CHECK_PARTS,
-            "--env", "LINTIAN_TAGS_TO_SUPPRESS=" + LINTIAN_TAGS_TO_SUPPRESS,
-            "--env", "LINTIAN_DISPLAY_INFO=" + LINTIAN_DISPLAY_INFO,
-            "--env", "LINTIAN_SHOW_OVERRIDES=" + LINTIAN_SHOW_OVERRIDES,
-            "--env", "LINTIAN_TAG_DISPLAY_LIMIT=" + LINTIAN_TAG_DISPLAY_LIMIT,
-            "--env", "LINTIAN_FAIL_ON_ERROR=" + LINTIAN_FAIL_ON_ERROR,
-            "--env", "LINTIAN_FAIL_ON_WARNING=" + LINTIAN_FAIL_ON_WARNING,
-            "--env", "LINTIAN_FAIL_ON_INFO=" + LINTIAN_FAIL_ON_INFO,
-            "--env", "LINTIAN_FAIL_ON_PEDANTIC=" + LINTIAN_FAIL_ON_PEDANTIC,
-            "--env", "LINTIAN_FAIL_ON_EXPERIMENTAL=" + LINTIAN_FAIL_ON_EXPERIMENTAL,
-            "--env", "LINTIAN_FAIL_ON_OVERRIDE=" + LINTIAN_FAIL_ON_OVERRIDE,
-            "--env", "LINTIAN_NO_FAIL=" + LINTIAN_NO_FAIL,
-            "--env", "DPKG_BUILDPACKAGE_OPTS=" + DPKG_BUILDPACKAGE_OPTS,
-            "--env", "LINTIAN_OPTS=" + LINTIAN_OPTS,
+            ...envOpts,
             "--platform", platform,
             dockerImage,
             "sleep", "inf"
