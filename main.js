@@ -184,11 +184,12 @@ async function main() {
                 container,
                 "sh",
                 "-c",
-                "'",
-                    "test","-f", backportsListFile,
+                "'" + \
+                    "test",
+                    "-f", backportsListFile,
                     "&&",
-                    "cat", backportsListFile,
-               "'",
+                    "cat", backportsListFile \
+                + "'",
             ], backportsListOpts)
 
             backportsOpts = [];
