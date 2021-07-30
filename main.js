@@ -94,7 +94,9 @@ async function main() {
             core.endGroup()
         }
 
-        core.startGroup("Create env file")
+
+        core.startGroup("Create container")
+
         envOpts = {}
 
         // Add each build env
@@ -121,9 +123,7 @@ async function main() {
         envOpts.push("--env").push("LINTIAN_NO_FAIL=" + LINTIAN_NO_FAIL)
         envOpts.push("--env").push("DPKG_BUILDPACKAGE_OPTS=" + DPKG_BUILDPACKAGE_OPTS)
         envOpts.push("--env").push("LINTIAN_OPTS=" + LINTIAN_OPTS)
-        core.endGroup()
 
-        core.startGroup("Create container")
         await exec.exec("docker", [
             "create",
             "--name", container,
