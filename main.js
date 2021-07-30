@@ -144,6 +144,14 @@ async function main() {
         core.saveState("container", container)
         core.endGroup()
 
+        core.startGroup("Print env")
+        await exec.exec("docker", [
+            "exec",
+            container,
+            "env"
+        ])
+        core.endGroup()
+
         if (INSTALL_DEPS) {
             core.startGroup("Installing dependencies")
             await exec.exec("docker", [
