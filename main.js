@@ -9,8 +9,15 @@ async function main() {
     try {
         let container = "deb-builder";
 
-        const buildEnvStr = core.getInput("additional_env") || ""
-        const buildEnvList = buildEnvStr.split("\n").filter(x => x !== "")
+        const buildEnvStr = "\n" + core.getInput("additional_env") || ""
+        const buildEnvNames = buildEnvStr
+          .match(/\n\w+=/g)
+          .filter(s => s && s != '\n')
+          .map(s => s.substring(1, s.length-1))
+        const buildEnvValues = buildEnvStr
+          .split(/\n\w+=/)
+          .filter(s => s && s != '\n')
+        const buildEnvList = buildEnvNames.map((n, i) => `${n}=${buildEnvValues[i]}`)
 
         const dockerImage = core.getInput("docker_image") || "debian:stable"
         const sourceRelativeDirectory = core.getInput("source_directory")
