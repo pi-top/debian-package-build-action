@@ -99,7 +99,6 @@ async function main() {
 
         envOpts = {}
 
-        // Add each build env
         for (let i = 0; i < buildEnvList.length; i++) {
             envOpts.push("--env").push(buildEnvList[i])
         }
