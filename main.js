@@ -51,8 +51,8 @@ async function main() {
         
         core.startGroup("Print details")
         const details = {
-            dockerImage: dockerImage ,
-            sourceDirectory: sourceDirectory ,
+            dockerImage: dockerImage,
+            sourceDirectory: sourceDirectory,
             buildDirectory: buildDirectory,
             targetArchitecture: targetArchitecture,
             DEBUG: DEBUG,
@@ -164,10 +164,7 @@ async function main() {
             await exec.exec("docker", [
                 "exec",
                 container,
-                "sudo",
-                "apt-get",
-                "upgrade",
-                "-y",
+                "sudo", "apt-get", "upgrade","-y",
             ])
 
             let backportsListStdout = "";
@@ -182,9 +179,7 @@ async function main() {
             await exec.exec("docker", [
                 "exec",
                 container,
-                "sh",
-                "-c",
-                "'test -f " + backportsListFile + " && cat " + backportsListFile + "'",
+                "cat", backportsListFile,
             ], backportsListOpts)
 
             backportsOpts = [];
