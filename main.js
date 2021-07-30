@@ -99,9 +99,8 @@ async function main() {
 
         envOpts = {}
 
-        for (let i = 0; i < buildEnvList.length; i++) {
-            envOpts.push("--env").push(buildEnvList[i])
-        }
+        buildEnvList.forEach((buildEnv) => envOpts.push("--env").push(buildEnv))
+        
         envOpts.push("--env").push("DEBUG=" + DEBUG)
         envOpts.push("--env").push("INSTALL_BUILD_DEPS=" + INSTALL_BUILD_DEPS)
         envOpts.push("--env").push("BUILD=" + BUILD)
