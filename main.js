@@ -9,8 +9,17 @@ async function main() {
     try {
         let container = "deb-builder";
 
-        const buildEnvStr = core.getInput("additional_env") || ""
-        const buildEnvList = buildEnvStr.split("\n").filter(x => x !== "")
+        // Parse additional_env string of multiple VAR=value statements into array of such statements buildEnvList
+        // Supports newlines in values but will treat each line starting VAR= as a new declaration
+        const buildEnvStr = "\n" + core.getInput("additional_env") || ""
+        const buildEnvNames = buildEnvStr
+          .match(/\n\w+=/g)
+          .filter(s => s && s != '\n')
+          .map(s => s.substring(1, s.length-1))
+        const buildEnvValues = buildEnvStr
+          .split(/\n\w+=/)
+          .filter(s => s && s != '\n')
+        const buildEnvList = buildEnvNames.map((n, i) => `${n}=${buildEnvValues[i]}`)
 
         const dockerImage = core.getInput("docker_image") || "debian:stable"
         const sourceRelativeDirectory = core.getInput("source_directory")
@@ -48,7 +57,7 @@ async function main() {
         // Additional options
         const DPKG_BUILDPACKAGE_OPTS = core.getInput("DPKG_BUILDPACKAGE_OPTS") || ""
         const LINTIAN_OPTS = core.getInput("LINTIAN_OPTS") || ""
-        
+
         core.startGroup("Print details")
         const details = {
             dockerImage: dockerImage,
@@ -135,7 +144,7 @@ async function main() {
             "sleep", "inf"
         ])
         core.endGroup()
-        
+
         core.startGroup("Start container")
         await exec.exec("docker", [
             "start",
