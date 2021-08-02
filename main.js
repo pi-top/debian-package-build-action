@@ -11,15 +11,15 @@ async function main() {
 
         // Parse additional_env string of multiple VAR=value statements into array of such statements buildEnvList
         // Supports newlines in values but will treat each line starting VAR= as a new declaration
-        const buildEnvStr = "\n" + core.getInput("additional_env") || ""
-        const buildEnvNames = buildEnvStr
-          .match(/\n\w+=/g)
-          .filter(s => s && s != '\n')
-          .map(s => s.substring(1, s.length-1))
-        const buildEnvValues = buildEnvStr
-          .split(/\n\w+=/)
-          .filter(s => s && s != '\n')
-        const buildEnvList = buildEnvNames.map((n, i) => `${n}=${buildEnvValues[i]}`)
+        let buildEnvList = []
+        const additionalEnv = core.getInput("additional_env")
+        const buildEnvNames = additionalEnv.match(/^\w+=/gm)
+        if (buildEnvNames) {
+          const buildEnvValues = (additionalEnv + '\n')
+            .split(/^\w+=/gm).slice(1)
+            .map(s => s.replace(/\n$/, ''))
+          buildEnvList = buildEnvNames.map((n, i) => `${n}${buildEnvValues[i]}`)
+        }
 
         const dockerImage = core.getInput("docker_image") || "debian:stable"
         const sourceRelativeDirectory = core.getInput("source_directory")
