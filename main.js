@@ -9,6 +9,8 @@ async function main() {
     try {
         let container = "deb-builder";
 
+        // Parse additional_env string of multiple VAR=value statements into array of such statements buildEnvList
+        // Supports newlines in values but will treat each line starting VAR= as a new declaration
         const buildEnvStr = "\n" + core.getInput("additional_env") || ""
         const buildEnvNames = buildEnvStr
           .match(/\n\w+=/g)
@@ -55,7 +57,7 @@ async function main() {
         // Additional options
         const DPKG_BUILDPACKAGE_OPTS = core.getInput("DPKG_BUILDPACKAGE_OPTS") || ""
         const LINTIAN_OPTS = core.getInput("LINTIAN_OPTS") || ""
-        
+
         core.startGroup("Print details")
         const details = {
             dockerImage: dockerImage ,
@@ -142,7 +144,7 @@ async function main() {
             "sleep", "inf"
         ])
         core.endGroup()
-        
+
         core.startGroup("Start container")
         await exec.exec("docker", [
             "start",
