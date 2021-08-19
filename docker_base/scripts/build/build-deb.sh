@@ -68,29 +68,46 @@ fi
 debug_echo "DEBUG: print DPKG_BUILDPACKAGE_OPTS..."
 debug_echo "${DPKG_BUILDPACKAGE_OPTS}"
 
-if [[ -n "${SIGNING_KEY}" ]]; then
-  debug_echo "Signing key found"
+handle_signing_key() {
+  if [[ -z "${SIGNING_KEY}" ]]; then
+    debug_echo "No signing key found"
+    debug_echo "Updating dpkg-buildpackage opts with '--no-sign'"
+    DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-sign"
+    return
+  fi
 
-  KEY_PATH="/tmp/debsign.key"
-  debug_echo "Writing signing key to file"
-  echo "${SIGNING_KEY}" >"${KEY_PATH}"
+  no_tty_gpg_command="/usr/local/bin/gpg-no-tty"
+
+  debug_echo "Creating 'no tty' script to act as signing program"
+
+  echo "#!/bin/bash
+  gpg \
+    --no-tty \
+    -v \
+    --pinentry-mode loopback \
+    --batch \$@" >${no_tty_gpg_command}
+  chmod +x ${no_tty_gpg_command}
+
+  signing_key_path="/tmp/debsign.key"
+  debug_echo "Writing signing key to ${signing_key_path}"
+  echo "${SIGNING_KEY}" >"${signing_key_path}"
 
   debug_echo "Importing signing key into keyring"
-  gpg -v --batch --import "${KEY_PATH}"
+  ${no_tty_gpg_command} --import "${signing_key_path}"
 
   debug_echo "Extracting key ID from signing key file"
-  KEY_ID=$(gpg --with-colons --import-options show-only --import "${KEY_PATH}" | grep "^sec" | cut -d':' -f5)
-  if [[ -n "${KEY_ID}" ]]; then
-    debug_echo "Updating dpkg-buildpackage opts with signing key ID"
-    DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --sign-key=${KEY_ID}"
-  else
+  KEY_ID=$(gpg --with-colons --import-options show-only --import "${signing_key_path}" | grep "^sec" | cut -d':' -f5)
+
+  if [[ -z "${KEY_ID}" ]]; then
     debug_echo "WARNING: Signing key has no valid ID"
+    return
   fi
-else
-  debug_echo "No signing key found"
-  debug_echo "Updating dpkg-buildpackage opts with '--no-sign'"
-  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-sign"
-fi
+
+  debug_echo "Updating dpkg-buildpackage opts with signing key args"
+  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --force-sign --sign-key=${KEY_ID} --sign-command=${no_tty_gpg_command}"
+}
+
+handle_signing_key
 
 debug_echo "Parsing dpkg-buildpackage arguments..."
 IFS=' ' read -ra DPKG_BUILDPACKAGE_OPTS_ARR <<<"$DPKG_BUILDPACKAGE_OPTS"
