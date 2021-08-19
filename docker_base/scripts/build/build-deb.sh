@@ -63,11 +63,19 @@ else
 fi
 
 if [[ "${DPKG_BUILDPACKAGE_HARDEN_ALL}" -eq 1 ]]; then
-  export DEB_BUILD_MAINT_OPTIONS="${DEB_BUILD_MAINT_OPTIONS} hardening=+all"
+  if [[ -n ${DEB_BUILD_MAINT_OPTIONS:-} ]]; then
+    export DEB_BUILD_MAINT_OPTIONS="${DEB_BUILD_MAINT_OPTIONS} hardening=+all"
+  else
+    export DEB_BUILD_MAINT_OPTIONS="hardening=+all"
+  fi
 fi
 
 if [[ "${DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE}" -eq 1 ]]; then
-  export DEB_BUILD_OPTIONS="${DEB_BUILD_OPTIONS} noddebs"
+  if [[ -n ${DEB_BUILD_OPTIONS:-} ]]; then
+    export DEB_BUILD_OPTIONS="${DEB_BUILD_OPTIONS} noddebs"
+  else
+    export DEB_BUILD_OPTIONS="noddebs"
+  fi
 fi
 
 if [[ "${DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE}" -eq 1 ]]; then
