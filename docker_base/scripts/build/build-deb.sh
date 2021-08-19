@@ -62,6 +62,18 @@ else
 
 fi
 
+if [[ "${DPKG_BUILDPACKAGE_HARDEN_ALL}" -eq 1 ]]; then
+  export DEB_BUILD_MAINT_OPTIONS="${DEB_BUILD_MAINT_OPTIONS} hardening=+all"
+fi
+
+if [[ "${DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE}" -eq 1 ]]; then
+  export DEB_BUILD_OPTIONS="${DEB_BUILD_OPTIONS} noddebs"
+fi
+
+if [[ "${DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE}" -eq 1 ]]; then
+  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --changes-option=-sa"
+fi
+
 if [[ "${DPKG_BUILDPACKAGE_CHECK_BUILDDEPS}" -eq 0 ]]; then
   DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-check-builddeps"
 fi
@@ -70,44 +82,8 @@ if [[ "${DPKG_BUILDPACKAGE_POST_CLEAN}" -eq 1 ]]; then
   DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --post-clean"
 fi
 
-handle_signing_key() {
-  _handle_no_signing_key() {
-    debug_echo $@
-    debug_echo "Updating dpkg-buildpackage opts with '--no-sign'"
-    DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-sign"
-  }
-
-  if [[ -z "${SIGNING_KEY}" ]]; then
-    _handle_no_signing_key "No signing key found"
-    return
-  fi
-
-  signing_key_path="/tmp/debsign.key"
-  debug_echo "Writing signing key to ${signing_key_path}"
-  echo "${SIGNING_KEY}" >"${signing_key_path}"
-
-  debug_echo "Importing signing key into keyring"
-  ${NO_TTY_GPG_COMMAND} --import "${signing_key_path}"
-
-  debug_echo "Extracting key ID from signing key file"
-  KEY_ID=$(${NO_TTY_GPG_COMMAND} --with-colons --show-keys "${signing_key_path}" | grep "^fpr" | cut -d':' -f10 | head -n1)
-
-  rm "${signing_key_path}"
-
-  if [[ -z "${KEY_ID}" ]]; then
-    _handle_no_signing_key "Signing key has no valid ID"
-    return
-  fi
-
-  debug_echo "Key ID: ${KEY_ID}"
-
-  debug_echo "Updating dpkg-buildpackage opts with signing key args"
-  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --force-sign"
-  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --sign-key=${KEY_ID}"
-  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --sign-command=${NO_TTY_GPG_COMMAND}"
-}
-
-handle_signing_key
+# Don't sign here
+DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-sign"
 
 debug_echo "DEBUG: print DPKG_BUILDPACKAGE_OPTS..."
 debug_echo "${DPKG_BUILDPACKAGE_OPTS}"

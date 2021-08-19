@@ -32,9 +32,15 @@ ENV DPKG_BUILDPACKAGE_LOG_FILE="/dev/null"
 ENV LINTIAN_LOG_FILE="/tmp/lintian.log"
 
 # dpkg-buildpackage configuration
+ENV DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE=0
+ENV DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE=1
+ENV DPKG_BUILDPACKAGE_HARDEN_ALL=1
 ENV DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=0
 ENV DPKG_BUILDPACKAGE_POST_CLEAN=0
 # Manpage: https://manpages.debian.org/$DEBIAN_BASE_IMAGE/dpkg-dev/dpkg-buildpackage.1.en.html
+# Additional config:
+#   * http://man7.org/linux/man-pages/man1/dpkg-buildflags.1.html#FEATURE_AREAS
+#   * https://www.debian.org/doc/debian-policy/ch-source.html#debian-rules-and-deb-build-options
 # Space-separated arguments
 ENV DPKG_BUILDPACKAGE_OPTS=""
 

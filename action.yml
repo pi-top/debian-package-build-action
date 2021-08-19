@@ -50,6 +50,18 @@ inputs:
     description: "Armored GPG key to use to sign packages"
     required: false
     default: ''
+  DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE:
+    description: ""
+    required: false
+    default: '0'
+  DPKG_BUILDPACKAGE_HARDEN_ALL:
+    description: ""
+    required: false
+    default: '1'
+  DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE:
+    description: ""
+    required: false
+    default: '1'
   DPKG_BUILDPACKAGE_CHECK_BUILDDEPS:
     description: ""
     required: false
