@@ -57,10 +57,6 @@ else
 
 fi
 
-if [[ "${DPKG_BUILDPACKAGE_GPG_SIGN}" -eq 0 ]]; then
-  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-sign"
-fi
-
 if [[ "${DPKG_BUILDPACKAGE_CHECK_BUILDDEPS}" -eq 0 ]]; then
   DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-check-builddeps"
 fi
@@ -86,10 +82,14 @@ if [[ -n "${SIGNING_KEY}" ]]; then
   KEY_ID=$(gpg --with-colons --import-options show-only --import "${KEY_PATH}" | grep "^sec" | cut -d':' -f5)
   if [[ -n "${KEY_ID}" ]]; then
     debug_echo "Updating dpkg-buildpackage opts with signing key ID"
-    DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} -k${KEY_ID}"
+    DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --sign-key=${KEY_ID}"
   else
     debug_echo "WARNING: Signing key has no valid ID"
   fi
+else
+  debug_echo "No signing key found"
+  debug_echo "Updating dpkg-buildpackage opts with '--no-sign'"
+  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-sign"
 fi
 
 debug_echo "Parsing dpkg-buildpackage arguments..."

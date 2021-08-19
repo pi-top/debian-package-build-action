@@ -30,8 +30,6 @@ ENV DPKG_BUILDPACKAGE_LOG_FILE="/dev/null"
 ENV LINTIAN_LOG_FILE="/tmp/lintian.log"
 
 # dpkg-buildpackage configuration
-# TODO: add signing support
-ENV DPKG_BUILDPACKAGE_GPG_SIGN=0
 ENV DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=0
 ENV DPKG_BUILDPACKAGE_POST_CLEAN=0
 # Manpage: https://manpages.debian.org/$DEBIAN_BASE_IMAGE/dpkg-dev/dpkg-buildpackage.1.en.html
