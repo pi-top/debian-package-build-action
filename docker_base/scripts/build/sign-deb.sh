@@ -27,17 +27,17 @@ main() {
   ${NO_TTY_GPG_COMMAND} --import "${signing_key_path}"
 
   debug_echo "Extracting key ID from signing key file"
-  KEY_ID=$(${NO_TTY_GPG_COMMAND} --with-colons --show-keys "${signing_key_path}" | grep "^ssb" | head -n1 | cut -d':' -f5 | grep -o '.\{8\}$')
+  SIGNING_KEY_FINGERPRINT=$(${NO_TTY_GPG_COMMAND} --with-colons --show-keys "${signing_key_path}" | grep "^fpr" | cut -d':' -f10 | head -n1)
 
   rm "${signing_key_path}"
 
-  if [[ -z "${KEY_ID}" ]]; then
+  if [[ -z "${SIGNING_KEY_FINGERPRINT}" ]]; then
     return
   fi
 
-  debug_echo "Key ID: ${KEY_ID}"
+  debug_echo "Key ID: ${SIGNING_KEY_FINGERPRINT}"
 
-  debsign -p${NO_TTY_GPG_COMMAND} -k${KEY_ID} /build/*.changes
+  debsign -p${NO_TTY_GPG_COMMAND} -k${SIGNING_KEY_FINGERPRINT} /build/*.changes
 }
 
 main
