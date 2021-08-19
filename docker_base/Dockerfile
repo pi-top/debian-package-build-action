@@ -12,6 +12,8 @@ VOLUME /build
 COPY scripts/build/install-deb-build-deps.sh /install-deb-build-deps
 COPY scripts/build/build-deb.sh /build-deb
 COPY scripts/build/check-deb.sh /check-deb
+ENV NO_TTY_GPG_COMMAND="/gpg-no-tty"
+COPY scripts/build/gpg-no-tty.sh $NO_TTY_GPG_COMMAND
 
 #########################
 # Environment variables #

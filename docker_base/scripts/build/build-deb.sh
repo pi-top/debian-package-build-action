@@ -80,27 +80,17 @@ handle_signing_key() {
     return
   fi
 
-  no_tty_gpg_command="/usr/local/bin/gpg-no-tty"
-
-  debug_echo "Creating 'no tty' script to act as signing program"
-
-  echo "#!/bin/bash
-  gpg \
-    --no-tty \
-    -v \
-    --pinentry-mode loopback \
-    --batch \$@" >${no_tty_gpg_command}
-  chmod +x ${no_tty_gpg_command}
-
   signing_key_path="/tmp/debsign.key"
   debug_echo "Writing signing key to ${signing_key_path}"
   echo "${SIGNING_KEY}" >"${signing_key_path}"
 
   debug_echo "Importing signing key into keyring"
-  ${no_tty_gpg_command} --import "${signing_key_path}"
+  ${NO_TTY_GPG_COMMAND} --import "${signing_key_path}"
 
   debug_echo "Extracting key ID from signing key file"
-  KEY_ID=$(gpg --with-colons --import-options show-only --import "${signing_key_path}" | grep "^sec" | cut -d':' -f5)
+  KEY_ID=$(${NO_TTY_GPG_COMMAND} --with-colons --import-options show-only --import "${signing_key_path}" | grep "^sec" | cut -d':' -f5)
+
+  rm "${signing_key_path}"
 
   if [[ -z "${KEY_ID}" ]]; then
     _handle_no_signing_key "Signing key has no valid ID"
@@ -108,7 +98,7 @@ handle_signing_key() {
   fi
 
   debug_echo "Updating dpkg-buildpackage opts with signing key args"
-  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --force-sign --sign-key=${KEY_ID} --sign-command=${no_tty_gpg_command}"
+  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --force-sign --sign-key=${KEY_ID} --sign-command=${NO_TTY_GPG_COMMAND}"
 }
 
 handle_signing_key
