@@ -90,7 +90,7 @@ handle_signing_key() {
   ${NO_TTY_GPG_COMMAND} --import "${signing_key_path}"
 
   debug_echo "Extracting key ID from signing key file"
-  KEY_ID=$(${NO_TTY_GPG_COMMAND} --with-colons --show-keys "${signing_key_path}" | grep "^ssb" | cut -d':' -f5 | tail -c9)
+  KEY_ID=$(${NO_TTY_GPG_COMMAND} --with-colons --show-keys "${signing_key_path}" | grep "^ssb" | cut -d':' -f5 | grep -o '.\{8\}$')
 
   rm "${signing_key_path}"
 
