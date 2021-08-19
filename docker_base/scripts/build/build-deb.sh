@@ -90,7 +90,7 @@ handle_signing_key() {
   ${NO_TTY_GPG_COMMAND} --import "${signing_key_path}"
 
   debug_echo "Extracting key ID from signing key file"
-  KEY_ID=$(${NO_TTY_GPG_COMMAND} --list-packets <"${signing_key_path}" | awk '$1=="keyid:"{print$2}' | head -n1)
+  KEY_ID=$(${NO_TTY_GPG_COMMAND} --with-colons --show-keys "${signing_key_path}" | grep "^fpr" | cut -d':' -f10 | head -n1)
 
   rm "${signing_key_path}"
 
