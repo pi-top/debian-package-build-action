@@ -57,10 +57,9 @@ jobs:
           context: docker_base
           build-args: DEBIAN_BASE_IMAGE=${{ matrix.base_image }}
           platforms: ${{ env.PLATFORMS }}
-          push: ${{ github.ref == 'refs/heads/master' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Show image digest
-        if: github.ref == 'refs/heads/master'
         run: echo ${{ steps.docker_build_push.outputs.digest }}
