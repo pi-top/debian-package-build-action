@@ -81,14 +81,34 @@ fi
 debug_echo "DEBUG: print DPKG_BUILDPACKAGE_OPTS..."
 debug_echo "${DPKG_BUILDPACKAGE_OPTS}"
 
+if [[ -n "${SIGNING_KEY}" ]]; then
+  debug_echo "Signing key found"
+
+  KEY_PATH="/tmp/debsign.key"
+  debug_echo "Writing signing key to file"
+  echo "${SIGNING_KEY}" >"${KEY_PATH}"
+
+  debug_echo "Importing signing key into keyring"
+  gpg --import "${KEY_PATH}"
+
+  debug_echo "Extracting key ID from signing key file"
+  KEY_ID=$(gpg --with-colons --import-options show-only --import "${KEY_PATH}" | grep "^sec" | cut -d':' -f5)
+  if [[ -n "${KEY_ID}" ]]; then
+    debug_echo "Updating dpkg-buildpackage opts with signing key ID"
+    DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} -k${KEY_ID}"
+  else
+    debug_echo "WARNING: Signing key has no valid ID"
+  fi
+fi
+
 debug_echo "Parsing dpkg-buildpackage arguments..."
 IFS=' ' read -ra DPKG_BUILDPACKAGE_OPTS_ARR <<<"$DPKG_BUILDPACKAGE_OPTS"
 
 debug_echo "Building package..."
 dpkg-buildpackage "${DPKG_BUILDPACKAGE_OPTS_ARR[@]}" | tee "${DPKG_BUILDPACKAGE_LOG_FILE}"
 
-debug_echo "DEBUG: Listing temporary directory contents AFTER building..."
 if [[ "${DEBUG}" -eq 1 ]]; then
+  debug_echo "DEBUG: Listing temporary directory contents AFTER building..."
   ls -la
 fi
 
@@ -99,8 +119,8 @@ for x in "${tmp_dir_root}/"*; do
   fi
 done
 
-debug_echo "DEBUG: Listing /build directory contents..."
 if [[ "${DEBUG}" -eq 1 ]]; then
+  debug_echo "DEBUG: Listing /build directory contents..."
   ls -la /build
 fi
 

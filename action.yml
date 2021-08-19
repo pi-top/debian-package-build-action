@@ -5,113 +5,117 @@ branding:
   icon: package
 inputs:
   docker_image:
-    description: name of the docker image used to build the package
+    description: "name of the docker image used to build the package"
     required: false
     default: 'debian:stable'
   source_directory:
-    description: path to the directory where the source of the package is located
+    description: "path to the directory where the source of the package is located"
     required: false
     default: './'
   build_directory:
-    description: path to the directory where the build artifacts will be placed
+    description: "path to the directory where the build artifacts will be placed"
     required: false
     default: '/artifacts'
   target_architecture:
-    description: package target architecture
+    description: "package target architecture"
     required: false
     default: 'amd64'
   additional_env:
-    description: 'Additional environment variables for the build'
+    description: "Additional environment variables for the build"
     required: false
     default: ''
   # Stages
   DEBUG:
-    description: Display debug information while building
+    description: "Display debug information while building"
     required: false
     default: '0'
   INSTALL_DEPS:
-    description: Install dependencies
+    description: "Install dependencies"
     required: false
     default: '1'
   INSTALL_BUILD_DEPS:
-    description: Install package build dependencies
+    description: "Install package build dependencies"
     required: false
     default: '1'
   BUILD:
-    description: If 'true', builds the package
+    description: "If 'true', builds the package"
     required: false
     default: '1'
   CHECK:
-    description: If 'true', checks the built package with lintian
+    description: "If 'true', checks the built package with lintian"
     required: false
     default: '1'
   # Build configuration
+  SIGNING_KEY:
+    description: "Armored GPG key to use to sign packages"
+    required: false
+    default: ''
   DPKG_BUILDPACKAGE_CHECK_BUILDDEPS:
-    description: ''
+    description: ""
     required: false
     default: '0'
   DPKG_BUILDPACKAGE_POST_CLEAN:
-    description: ''
+    description: ""
     required: false
     default: '0'
   # Quality check configuration - comma-separated lists
   LINTIAN_DONT_CHECK_PARTS:
-    description: ''
+    description: ""
     required: false
     default: 'nmu'
   LINTIAN_TAGS_TO_SUPPRESS:
-    description: ''
+    description: ""
     required: false
     default: 'initial-upload-closes-no-bugs,debian-watch-file-is-missing'
   # Quality check configuration - boolean
   LINTIAN_DISPLAY_INFO:
-    description: ''
+    description: ""
     required: false
     default: '1'
   LINTIAN_SHOW_OVERRIDES:
-    description: ''
+    description: ""
     required: false
     default: '1'
   LINTIAN_TAG_DISPLAY_LIMIT:
-    description: ''
+    description: ""
     required: false
     default: '0'
   # LINTIAN_NO_FAIL overrides all others
   LINTIAN_FAIL_ON_ERROR:
-    description: ''
+    description: ""
     required: false
     default: '1'
   LINTIAN_FAIL_ON_WARNING:
-    description: ''
+    description: ""
     required: false
     default: '1'
   LINTIAN_FAIL_ON_INFO:
-    description: ''
+    description: ""
     required: false
     default: '0'
   LINTIAN_FAIL_ON_PEDANTIC:
-    description: ''
+    description: ""
     required: false
     default: '0'
   LINTIAN_FAIL_ON_EXPERIMENTAL:
-    description: ''
+    description: ""
     required: false
     default: '0'
   LINTIAN_FAIL_ON_OVERRIDE:
-    description: ''
+    description: ""
     required: false
     default: '0'
   LINTIAN_NO_FAIL:
-    description: ''
+    description: ""
     required: false
     default: '0'
   # Additional options
   DPKG_BUILDPACKAGE_OPTS:
-    description: ''
+    description: ""
     required: false
     default: ''
   LINTIAN_OPTS:
-    description: ''
+    description: ""
     required: false
     default: ''
 

@@ -28,6 +28,7 @@ async function main() {
         const BUILD = core.getInput("BUILD") || "1"
         const CHECK = core.getInput("CHECK") || "1"
         // Build configuration
+        const SIGNING_KEY = core.getInput("SIGNING_KEY") || ""
         const DPKG_BUILDPACKAGE_CHECK_BUILDDEPS = core.getInput("DPKG_BUILDPACKAGE_CHECK_BUILDDEPS") || "0"
         const DPKG_BUILDPACKAGE_POST_CLEAN = core.getInput("DPKG_BUILDPACKAGE_POST_CLEAN") || "0"
         // Quality check configuration - comma-separated lists
@@ -103,6 +104,7 @@ async function main() {
           "INSTALL_BUILD_DEPS=" + INSTALL_BUILD_DEPS,
           "BUILD=" + BUILD,
           "CHECK=" + CHECK,
+          "SIGNING_KEY=" + SIGNING_KEY,
           "DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=" + DPKG_BUILDPACKAGE_CHECK_BUILDDEPS,
           "DPKG_BUILDPACKAGE_POST_CLEAN=" + DPKG_BUILDPACKAGE_POST_CLEAN,
           "LINTIAN_DONT_CHECK_PARTS=" + LINTIAN_DONT_CHECK_PARTS,
