@@ -28,7 +28,7 @@ inputs:
   DEBUG:
     description: "Display debug information while building"
     required: false
-    default: '0'
+    default: '1'
   INSTALL_DEPS:
     description: "Install dependencies"
     required: false

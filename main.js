@@ -31,7 +31,7 @@ async function main() {
         const buildDirectory = path.join(workspaceDirectory, buildRelativeDirectory)
 
         // Stages - boolean
-        const DEBUG = core.getInput("DEBUG") || "0"
+        const DEBUG = core.getInput("DEBUG") || "1"
         const INSTALL_BUILD_DEPS = core.getInput("INSTALL_BUILD_DEPS") || "1"
         const INSTALL_DEPS = core.getInput("INSTALL_DEPS") || "1"
         const BUILD = core.getInput("BUILD") || "1"
