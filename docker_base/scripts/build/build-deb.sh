@@ -7,6 +7,11 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
+# HARDCORE DEBUGGING
+if [[ "${DEBUG}" -eq 1 ]]; then
+  set -x
+fi
+
 debug_echo() {
   if [[ "${DEBUG}" -eq 1 ]]; then
     echo "[build-deb] $1"
@@ -65,9 +70,6 @@ if [[ "${DPKG_BUILDPACKAGE_POST_CLEAN}" -eq 1 ]]; then
   DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --post-clean"
 fi
 
-debug_echo "DEBUG: print DPKG_BUILDPACKAGE_OPTS..."
-debug_echo "${DPKG_BUILDPACKAGE_OPTS}"
-
 handle_signing_key() {
   _handle_no_signing_key() {
     debug_echo $@
@@ -88,7 +90,7 @@ handle_signing_key() {
   ${NO_TTY_GPG_COMMAND} --import "${signing_key_path}"
 
   debug_echo "Extracting key ID from signing key file"
-  KEY_ID=$(${NO_TTY_GPG_COMMAND} --with-colons --import-options show-only --import "${signing_key_path}" | grep "^sec" | cut -d':' -f5)
+  KEY_ID=$(${NO_TTY_GPG_COMMAND} --with-colons --show-keys "${signing_key_path}" | grep "^ssb" | cut -d':' -f5 | tail -c9)
 
   rm "${signing_key_path}"
 
@@ -97,11 +99,18 @@ handle_signing_key() {
     return
   fi
 
+  debug_echo "Key ID: ${KEY_ID}"
+
   debug_echo "Updating dpkg-buildpackage opts with signing key args"
-  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --force-sign --sign-key=${KEY_ID} --sign-command=${NO_TTY_GPG_COMMAND}"
+  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --force-sign"
+  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --sign-key=${KEY_ID}"
+  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --sign-command=${NO_TTY_GPG_COMMAND}"
 }
 
 handle_signing_key
+
+debug_echo "DEBUG: print DPKG_BUILDPACKAGE_OPTS..."
+debug_echo "${DPKG_BUILDPACKAGE_OPTS}"
 
 debug_echo "Parsing dpkg-buildpackage arguments..."
 IFS=' ' read -ra DPKG_BUILDPACKAGE_OPTS_ARR <<<"$DPKG_BUILDPACKAGE_OPTS"
