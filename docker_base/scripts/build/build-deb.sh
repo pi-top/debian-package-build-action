@@ -69,10 +69,14 @@ debug_echo "DEBUG: print DPKG_BUILDPACKAGE_OPTS..."
 debug_echo "${DPKG_BUILDPACKAGE_OPTS}"
 
 handle_signing_key() {
-  if [[ -z "${SIGNING_KEY}" ]]; then
-    debug_echo "No signing key found"
+  _handle_no_signing_key() {
+    debug_echo $@
     debug_echo "Updating dpkg-buildpackage opts with '--no-sign'"
     DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-sign"
+  }
+
+  if [[ -z "${SIGNING_KEY}" ]]; then
+    _handle_no_signing_key "No signing key found"
     return
   fi
 
@@ -99,7 +103,7 @@ handle_signing_key() {
   KEY_ID=$(gpg --with-colons --import-options show-only --import "${signing_key_path}" | grep "^sec" | cut -d':' -f5)
 
   if [[ -z "${KEY_ID}" ]]; then
-    debug_echo "WARNING: Signing key has no valid ID"
+    _handle_no_signing_key "Signing key has no valid ID"
     return
   fi
 
