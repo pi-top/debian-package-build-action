@@ -5,4 +5,5 @@ gpg \
   -v \
   --pinentry-mode loopback \
   --batch \
+  --passphrase='${SIGNING_PASSPHRASE}' \
   $@
