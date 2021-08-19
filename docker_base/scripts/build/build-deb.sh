@@ -76,7 +76,7 @@ if [[ -n "${SIGNING_KEY}" ]]; then
   echo "${SIGNING_KEY}" >"${KEY_PATH}"
 
   debug_echo "Importing signing key into keyring"
-  gpg --import "${KEY_PATH}"
+  gpg -v --batch --import "${KEY_PATH}"
 
   debug_echo "Extracting key ID from signing key file"
   KEY_ID=$(gpg --with-colons --import-options show-only --import "${KEY_PATH}" | grep "^sec" | cut -d':' -f5)
