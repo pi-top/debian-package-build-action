@@ -9,8 +9,17 @@ async function main() {
     try {
         let container = "deb-builder";
 
-        const buildEnvStr = core.getInput("additional_env") || ""
-        const buildEnvList = buildEnvStr.split("\n").filter(x => x !== "")
+        // Parse additional_env string of multiple VAR=value statements into array of such statements buildEnvList
+        // Supports newlines in values but will treat each line starting VAR= as a new declaration
+        let buildEnvList = []
+        const additionalEnv = core.getInput("additional_env")
+        const buildEnvNames = additionalEnv.match(/^\w+=/gm)
+        if (buildEnvNames) {
+          const buildEnvValues = (additionalEnv + '\n')
+            .split(/^\w+=/gm).slice(1)
+            .map(s => s.replace(/\n$/, ''))
+          buildEnvList = buildEnvNames.map((n, i) => `${n}${buildEnvValues[i]}`)
+        }
 
         const dockerImage = core.getInput("docker_image") || "debian:stable"
         const sourceRelativeDirectory = core.getInput("source_directory")
@@ -49,7 +58,7 @@ async function main() {
         // Additional options
         const DPKG_BUILDPACKAGE_OPTS = core.getInput("DPKG_BUILDPACKAGE_OPTS") || ""
         const LINTIAN_OPTS = core.getInput("LINTIAN_OPTS") || ""
-        
+
         core.startGroup("Print details")
         const details = {
             dockerImage: dockerImage,
@@ -137,7 +146,7 @@ async function main() {
             "sleep", "inf"
         ])
         core.endGroup()
-        
+
         core.startGroup("Start container")
         await exec.exec("docker", [
             "start",
@@ -170,12 +179,12 @@ async function main() {
             ])
 
             let backportsListStdout = "";
-            const backportsListOpts = {}
+            const backportsListOpts = {};
+            backportsListOpts.ignoreReturnCode = true;
             backportsListOpts.listeners = {
                 stdout: (data) => {
                     backportsListStdout += data.toString();
-                },
-                ignoreReturnCode: true,
+                }
             }
             await exec.exec("docker", [
                 "exec",
