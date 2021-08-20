@@ -37,6 +37,11 @@ async function main() {
         const BUILD = core.getInput("BUILD") || "1"
         const CHECK = core.getInput("CHECK") || "1"
         // Build configuration
+        const SIGNING_KEY = core.getInput("SIGNING_KEY") || ""
+        const SIGNING_PASSPHRASE = core.getInput("SIGNING_PASSPHRASE") || ""
+        const DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE = core.getInput("DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE") || "0"
+        const DPKG_BUILDPACKAGE_HARDEN_ALL = core.getInput("DPKG_BUILDPACKAGE_HARDEN_ALL") || "0"
+        const DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE = core.getInput("DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE") || "0"
         const DPKG_BUILDPACKAGE_CHECK_BUILDDEPS = core.getInput("DPKG_BUILDPACKAGE_CHECK_BUILDDEPS") || "0"
         const DPKG_BUILDPACKAGE_POST_CLEAN = core.getInput("DPKG_BUILDPACKAGE_POST_CLEAN") || "0"
         // Quality check configuration - comma-separated lists
@@ -68,6 +73,9 @@ async function main() {
             INSTALL_BUILD_DEPS: INSTALL_BUILD_DEPS,
             BUILD: BUILD,
             CHECK: CHECK,
+            DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE: DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE,
+            DPKG_BUILDPACKAGE_HARDEN_ALL: DPKG_BUILDPACKAGE_HARDEN_ALL,
+            DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE: DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE,
             DPKG_BUILDPACKAGE_CHECK_BUILDDEPS: DPKG_BUILDPACKAGE_CHECK_BUILDDEPS,
             DPKG_BUILDPACKAGE_POST_CLEAN: DPKG_BUILDPACKAGE_POST_CLEAN,
             LINTIAN_DONT_CHECK_PARTS: LINTIAN_DONT_CHECK_PARTS,
@@ -112,6 +120,11 @@ async function main() {
           "INSTALL_BUILD_DEPS=" + INSTALL_BUILD_DEPS,
           "BUILD=" + BUILD,
           "CHECK=" + CHECK,
+          "SIGNING_KEY=" + SIGNING_KEY,
+          "SIGNING_PASSPHRASE=" + SIGNING_PASSPHRASE,
+          "DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE=" + DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE,
+          "DPKG_BUILDPACKAGE_HARDEN_ALL=" + DPKG_BUILDPACKAGE_HARDEN_ALL,
+          "DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE=" + DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE,
           "DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=" + DPKG_BUILDPACKAGE_CHECK_BUILDDEPS,
           "DPKG_BUILDPACKAGE_POST_CLEAN=" + DPKG_BUILDPACKAGE_POST_CLEAN,
           "LINTIAN_DONT_CHECK_PARTS=" + LINTIAN_DONT_CHECK_PARTS,
@@ -248,7 +261,15 @@ async function main() {
             core.endGroup()
         }
 
-
+        if (SIGNING_KEY) {
+            core.startGroup("Signing packages")
+            await exec.exec("docker", [
+                "exec",
+                container,
+                "/sign-deb"
+            ])
+            core.endGroup()
+        }
     } catch (error) {
         core.setFailed(error.message)
     }

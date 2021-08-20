@@ -57,8 +57,24 @@ else
 
 fi
 
-if [[ "${DPKG_BUILDPACKAGE_GPG_SIGN}" -eq 0 ]]; then
-  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-sign"
+if [[ "${DPKG_BUILDPACKAGE_HARDEN_ALL}" -eq 1 ]]; then
+  if [[ -n ${DEB_BUILD_MAINT_OPTIONS:-} ]]; then
+    export DEB_BUILD_MAINT_OPTIONS="${DEB_BUILD_MAINT_OPTIONS} hardening=+all"
+  else
+    export DEB_BUILD_MAINT_OPTIONS="hardening=+all"
+  fi
+fi
+
+if [[ "${DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE}" -eq 1 ]]; then
+  if [[ -n ${DEB_BUILD_OPTIONS:-} ]]; then
+    export DEB_BUILD_OPTIONS="${DEB_BUILD_OPTIONS} noddebs"
+  else
+    export DEB_BUILD_OPTIONS="noddebs"
+  fi
+fi
+
+if [[ "${DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE}" -eq 1 ]]; then
+  DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --changes-option=-sa"
 fi
 
 if [[ "${DPKG_BUILDPACKAGE_CHECK_BUILDDEPS}" -eq 0 ]]; then
@@ -69,6 +85,9 @@ if [[ "${DPKG_BUILDPACKAGE_POST_CLEAN}" -eq 1 ]]; then
   DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --post-clean"
 fi
 
+# Don't sign here
+DPKG_BUILDPACKAGE_OPTS="${DPKG_BUILDPACKAGE_OPTS} --no-sign"
+
 debug_echo "DEBUG: print DPKG_BUILDPACKAGE_OPTS..."
 debug_echo "${DPKG_BUILDPACKAGE_OPTS}"
 
@@ -78,8 +97,8 @@ IFS=' ' read -ra DPKG_BUILDPACKAGE_OPTS_ARR <<<"$DPKG_BUILDPACKAGE_OPTS"
 debug_echo "Building package..."
 dpkg-buildpackage "${DPKG_BUILDPACKAGE_OPTS_ARR[@]}" | tee "${DPKG_BUILDPACKAGE_LOG_FILE}"
 
-debug_echo "DEBUG: Listing temporary directory contents AFTER building..."
 if [[ "${DEBUG}" -eq 1 ]]; then
+  debug_echo "DEBUG: Listing temporary directory contents AFTER building..."
   ls -la
 fi
 
@@ -90,8 +109,8 @@ for x in "${tmp_dir_root}/"*; do
   fi
 done
 
-debug_echo "DEBUG: Listing /build directory contents..."
 if [[ "${DEBUG}" -eq 1 ]]; then
+  debug_echo "DEBUG: Listing /build directory contents..."
   ls -la /build
 fi
 

@@ -12,6 +12,9 @@ VOLUME /build
 COPY scripts/build/install-deb-build-deps.sh /install-deb-build-deps
 COPY scripts/build/build-deb.sh /build-deb
 COPY scripts/build/check-deb.sh /check-deb
+COPY scripts/build/sign-deb.sh /sign-deb
+ENV NO_TTY_GPG_COMMAND="/gpg-no-tty"
+COPY scripts/build/gpg-no-tty.sh $NO_TTY_GPG_COMMAND
 
 #########################
 # Environment variables #
@@ -30,11 +33,15 @@ ENV DPKG_BUILDPACKAGE_LOG_FILE="/dev/null"
 ENV LINTIAN_LOG_FILE="/tmp/lintian.log"
 
 # dpkg-buildpackage configuration
-# TODO: add signing support
-ENV DPKG_BUILDPACKAGE_GPG_SIGN=0
+ENV DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE=0
+ENV DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE=1
+ENV DPKG_BUILDPACKAGE_HARDEN_ALL=1
 ENV DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=0
 ENV DPKG_BUILDPACKAGE_POST_CLEAN=0
 # Manpage: https://manpages.debian.org/$DEBIAN_BASE_IMAGE/dpkg-dev/dpkg-buildpackage.1.en.html
+# Additional config:
+#   * http://man7.org/linux/man-pages/man1/dpkg-buildflags.1.html#FEATURE_AREAS
+#   * https://www.debian.org/doc/debian-policy/ch-source.html#debian-rules-and-deb-build-options
 # Space-separated arguments
 ENV DPKG_BUILDPACKAGE_OPTS=""
 
