@@ -7,11 +7,6 @@ set -euo pipefail
 IFS=$'\n\t'
 ###############################################################
 
-# HARDCORE DEBUGGING
-if [[ "${DEBUG}" -eq 1 ]]; then
-  set -x
-fi
-
 debug_echo() {
   if [[ "${DEBUG}" -eq 1 ]]; then
     echo "[build-deb] $1"
