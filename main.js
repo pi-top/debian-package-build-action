@@ -31,37 +31,41 @@ async function main() {
         const buildDirectory = path.join(workspaceDirectory, buildRelativeDirectory)
 
         // Stages - boolean
-        const DEBUG = core.getInput("DEBUG") || "0"
-        const INSTALL_BUILD_DEPS = core.getInput("INSTALL_BUILD_DEPS") || "1"
-        const INSTALL_DEPS = core.getInput("INSTALL_DEPS") || "1"
-        const BUILD = core.getInput("BUILD") || "1"
-        const CHECK = core.getInput("CHECK") || "1"
+        const debug = core.getInput("debug") || "0"
+        const installBuildDeps = core.getInput("install_build_deps") || "1"
+        const installDeps = core.getInput("install_deps") || "1"
+        const build = core.getInput("build") || "1"
+        const check = core.getInput("check") || "1"
         // Build configuration
-        const SIGNING_KEY = core.getInput("SIGNING_KEY") || ""
-        const SIGNING_PASSPHRASE = core.getInput("SIGNING_PASSPHRASE") || ""
-        const DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE = core.getInput("DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE") || "0"
-        const DPKG_BUILDPACKAGE_HARDEN_ALL = core.getInput("DPKG_BUILDPACKAGE_HARDEN_ALL") || "0"
-        const DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE = core.getInput("DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE") || "0"
-        const DPKG_BUILDPACKAGE_CHECK_BUILDDEPS = core.getInput("DPKG_BUILDPACKAGE_CHECK_BUILDDEPS") || "0"
-        const DPKG_BUILDPACKAGE_POST_CLEAN = core.getInput("DPKG_BUILDPACKAGE_POST_CLEAN") || "0"
+        const signingKey = core.getInput("signing_key") || ""
+        const signingPassphrase = core.getInput("signing_passphrase") || ""
+        const dpkg_buildpackage_include_debug_package = core.getInput("dpkg_buildpackage_include_debug_package") || "0"
+        const dpkg_buildpackage_harden_all = core.getInput("dpkg_buildpackage_harden_all") || "0"
+        const dpkg_buildpackage_force_include_source = core.getInput("dpkg_buildpackage_force_include_source") || "0"
+        const dpkg_buildpackage_check_builddeps = core.getInput("dpkg_buildpackage_check_builddeps") || "0"
+        const dpkg_buildpackage_post_clean = core.getInput("dpkg_buildpackage_post_clean") || "0"
         // Quality check configuration - comma-separated lists
-        const LINTIAN_DONT_CHECK_PARTS = core.getInput("LINTIAN_DONT_CHECK_PARTS") || "nmu"
-        const LINTIAN_TAGS_TO_SUPPRESS = core.getInput("LINTIAN_TAGS_TO_SUPPRESS") || "initial-upload-closes-no-bugs,debian-watch-file-is-missing"
+        const lintian_dont_check_parts = core.getInput("lintian_dont_check_parts") || "nmu"
+        const lintian_tags_to_suppress = core.getInput("lintian_tags_to_suppress") || ""
+        const lintian_check_changelog_spelling = core.getInput("lintian_check_changelog_spelling") || "1"
+        const lintian_check_itp_bug = core.getInput("lintian_check_itp_bug") || "0"
+        const lintian_check_watch_file = core.getInput("lintian_check_watch_file") || "0"
+
         // Quality check configuration - boolean
-        const LINTIAN_DISPLAY_INFO = core.getInput("LINTIAN_DISPLAY_INFO") || "1"
-        const LINTIAN_SHOW_OVERRIDES = core.getInput("LINTIAN_SHOW_OVERRIDES") || "1"
-        const LINTIAN_TAG_DISPLAY_LIMIT = core.getInput("LINTIAN_TAG_DISPLAY_LIMIT") || "0"
-        // LINTIAN_NO_FAIL overrides all others
-        const LINTIAN_FAIL_ON_ERROR = core.getInput("LINTIAN_FAIL_ON_ERROR") || "1"
-        const LINTIAN_FAIL_ON_WARNING = core.getInput("LINTIAN_FAIL_ON_WARNING") || "1"
-        const LINTIAN_FAIL_ON_INFO = core.getInput("LINTIAN_FAIL_ON_INFO") || "0"
-        const LINTIAN_FAIL_ON_PEDANTIC = core.getInput("LINTIAN_FAIL_ON_PEDANTIC") || "0"
-        const LINTIAN_FAIL_ON_EXPERIMENTAL = core.getInput("LINTIAN_FAIL_ON_EXPERIMENTAL") || "0"
-        const LINTIAN_FAIL_ON_OVERRIDE = core.getInput("LINTIAN_FAIL_ON_OVERRIDE") || "0"
-        const LINTIAN_NO_FAIL = core.getInput("LINTIAN_NO_FAIL") || "0"
+        const lintian_display_info = core.getInput("lintian_display_info") || "1"
+        const lintian_show_overrides = core.getInput("lintian_show_overrides") || "1"
+        const lintian_tag_display_limit = core.getInput("lintian_tag_display_limit") || "0"
+        // lintian_no_fail overrides all others
+        const lintian_fail_on_error = core.getInput("lintian_fail_on_error") || "1"
+        const lintian_fail_on_warning = core.getInput("lintian_fail_on_warning") || "1"
+        const lintian_fail_on_info = core.getInput("lintian_fail_on_info") || "0"
+        const lintian_fail_on_pedantic = core.getInput("lintian_fail_on_pedantic") || "0"
+        const lintian_fail_on_experimental = core.getInput("lintian_fail_on_experimental") || "0"
+        const lintian_fail_on_override = core.getInput("lintian_fail_on_override") || "0"
+        const lintian_no_fail = core.getInput("lintian_no_fail") || "0"
         // Additional options
-        const DPKG_BUILDPACKAGE_OPTS = core.getInput("DPKG_BUILDPACKAGE_OPTS") || ""
-        const LINTIAN_OPTS = core.getInput("LINTIAN_OPTS") || ""
+        const dpkg_buildpackage_opts = core.getInput("dpkg_buildpackage_opts") || ""
+        const lintian_opts = core.getInput("lintian_opts") || ""
 
         core.startGroup("Print details")
         const details = {
@@ -69,29 +73,32 @@ async function main() {
             sourceDirectory: sourceDirectory,
             buildDirectory: buildDirectory,
             targetArchitecture: targetArchitecture,
-            DEBUG: DEBUG,
-            INSTALL_BUILD_DEPS: INSTALL_BUILD_DEPS,
-            BUILD: BUILD,
-            CHECK: CHECK,
-            DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE: DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE,
-            DPKG_BUILDPACKAGE_HARDEN_ALL: DPKG_BUILDPACKAGE_HARDEN_ALL,
-            DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE: DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE,
-            DPKG_BUILDPACKAGE_CHECK_BUILDDEPS: DPKG_BUILDPACKAGE_CHECK_BUILDDEPS,
-            DPKG_BUILDPACKAGE_POST_CLEAN: DPKG_BUILDPACKAGE_POST_CLEAN,
-            LINTIAN_DONT_CHECK_PARTS: LINTIAN_DONT_CHECK_PARTS,
-            LINTIAN_TAGS_TO_SUPPRESS: LINTIAN_TAGS_TO_SUPPRESS,
-            LINTIAN_DISPLAY_INFO: LINTIAN_DISPLAY_INFO,
-            LINTIAN_SHOW_OVERRIDES: LINTIAN_SHOW_OVERRIDES,
-            LINTIAN_TAG_DISPLAY_LIMIT: LINTIAN_TAG_DISPLAY_LIMIT,
-            LINTIAN_FAIL_ON_ERROR: LINTIAN_FAIL_ON_ERROR,
-            LINTIAN_FAIL_ON_WARNING: LINTIAN_FAIL_ON_WARNING,
-            LINTIAN_FAIL_ON_INFO: LINTIAN_FAIL_ON_INFO,
-            LINTIAN_FAIL_ON_PEDANTIC: LINTIAN_FAIL_ON_PEDANTIC,
-            LINTIAN_FAIL_ON_EXPERIMENTAL: LINTIAN_FAIL_ON_EXPERIMENTAL,
-            LINTIAN_FAIL_ON_OVERRIDE: LINTIAN_FAIL_ON_OVERRIDE,
-            LINTIAN_NO_FAIL: LINTIAN_NO_FAIL,
-            DPKG_BUILDPACKAGE_OPTS: DPKG_BUILDPACKAGE_OPTS,
-            LINTIAN_OPTS: LINTIAN_OPTS,
+            debug: debug,
+            installBuildDeps: installBuildDeps,
+            build: build,
+            check: check,
+            dpkg_buildpackage_include_debug_package: dpkg_buildpackage_include_debug_package,
+            dpkg_buildpackage_harden_all: dpkg_buildpackage_harden_all,
+            dpkg_buildpackage_force_include_source: dpkg_buildpackage_force_include_source,
+            dpkg_buildpackage_check_builddeps: dpkg_buildpackage_check_builddeps,
+            dpkg_buildpackage_post_clean: dpkg_buildpackage_post_clean,
+            lintian_dont_check_parts: lintian_dont_check_parts,
+            lintian_tags_to_suppress: lintian_tags_to_suppress,
+            lintian_check_changelog_spelling: lintian_check_changelog_spelling,
+            lintian_check_itp_bug: lintian_check_itp_bug,
+            lintian_check_watch_file: lintian_check_watch_file,
+            lintian_display_info: lintian_display_info,
+            lintian_show_overrides: lintian_show_overrides,
+            lintian_tag_display_limit: lintian_tag_display_limit,
+            lintian_fail_on_error: lintian_fail_on_error,
+            lintian_fail_on_warning: lintian_fail_on_warning,
+            lintian_fail_on_info: lintian_fail_on_info,
+            lintian_fail_on_pedantic: lintian_fail_on_pedantic,
+            lintian_fail_on_experimental: lintian_fail_on_experimental,
+            lintian_fail_on_override: lintian_fail_on_override,
+            lintian_no_fail: lintian_no_fail,
+            dpkg_buildpackage_opts: dpkg_buildpackage_opts,
+            lintian_opts: lintian_opts,
         }
         console.log(details)
         core.endGroup()
@@ -116,31 +123,34 @@ async function main() {
 
         const envs = [
           ...buildEnvList,
-          "DEBUG=" + DEBUG,
-          "INSTALL_BUILD_DEPS=" + INSTALL_BUILD_DEPS,
-          "BUILD=" + BUILD,
-          "CHECK=" + CHECK,
-          "SIGNING_KEY=" + SIGNING_KEY,
-          "SIGNING_PASSPHRASE=" + SIGNING_PASSPHRASE,
-          "DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE=" + DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE,
-          "DPKG_BUILDPACKAGE_HARDEN_ALL=" + DPKG_BUILDPACKAGE_HARDEN_ALL,
-          "DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE=" + DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE,
-          "DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=" + DPKG_BUILDPACKAGE_CHECK_BUILDDEPS,
-          "DPKG_BUILDPACKAGE_POST_CLEAN=" + DPKG_BUILDPACKAGE_POST_CLEAN,
-          "LINTIAN_DONT_CHECK_PARTS=" + LINTIAN_DONT_CHECK_PARTS,
-          "LINTIAN_TAGS_TO_SUPPRESS=" + LINTIAN_TAGS_TO_SUPPRESS,
-          "LINTIAN_DISPLAY_INFO=" + LINTIAN_DISPLAY_INFO,
-          "LINTIAN_SHOW_OVERRIDES=" + LINTIAN_SHOW_OVERRIDES,
-          "LINTIAN_TAG_DISPLAY_LIMIT=" + LINTIAN_TAG_DISPLAY_LIMIT,
-          "LINTIAN_FAIL_ON_ERROR=" + LINTIAN_FAIL_ON_ERROR,
-          "LINTIAN_FAIL_ON_WARNING=" + LINTIAN_FAIL_ON_WARNING,
-          "LINTIAN_FAIL_ON_INFO=" + LINTIAN_FAIL_ON_INFO,
-          "LINTIAN_FAIL_ON_PEDANTIC=" + LINTIAN_FAIL_ON_PEDANTIC,
-          "LINTIAN_FAIL_ON_EXPERIMENTAL=" + LINTIAN_FAIL_ON_EXPERIMENTAL,
-          "LINTIAN_FAIL_ON_OVERRIDE=" + LINTIAN_FAIL_ON_OVERRIDE,
-          "LINTIAN_NO_FAIL=" + LINTIAN_NO_FAIL,
-          "DPKG_BUILDPACKAGE_OPTS=" + DPKG_BUILDPACKAGE_OPTS,
-          "LINTIAN_OPTS=" + LINTIAN_OPTS,
+          "DEBUG=" + debug,
+          "INSTALL_BUILD_DEPS=" + installBuildDeps,
+          "BUILD=" + build,
+          "CHECK=" + check,
+          "SIGNING_KEY=" + signingKey,
+          "SIGNING_PASSPHRASE=" + signingPassphrase,
+          "DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE=" + dpkg_buildpackage_include_debug_package,
+          "DPKG_BUILDPACKAGE_HARDEN_ALL=" + dpkg_buildpackage_harden_all,
+          "DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE=" + dpkg_buildpackage_force_include_source,
+          "DPKG_BUILDPACKAGE_CHECK_BUILDDEPS=" + dpkg_buildpackage_check_builddeps,
+          "DPKG_BUILDPACKAGE_POST_CLEAN=" + dpkg_buildpackage_post_clean,
+          "LINTIAN_DONT_CHECK_PARTS=" + lintian_dont_check_parts,
+          "LINTIAN_TAGS_TO_SUPPRESS=" + lintian_tags_to_suppress,
+          "LINTIAN_CHECK_CHANGELOG_SPELLING=" + lintian_check_changelog_spelling,
+          "LINTIAN_CHECK_ITP_BUG=" + lintian_check_itp_bug,
+          "LINTIAN_CHECK_WATCH_FILE=" + lintian_check_watch_file,
+          "LINTIAN_DISPLAY_INFO=" + lintian_display_info,
+          "LINTIAN_SHOW_OVERRIDES=" + lintian_show_overrides,
+          "LINTIAN_TAG_DISPLAY_LIMIT=" + lintian_tag_display_limit,
+          "LINTIAN_FAIL_ON_ERROR=" + lintian_fail_on_error,
+          "LINTIAN_FAIL_ON_WARNING=" + lintian_fail_on_warning,
+          "LINTIAN_FAIL_ON_INFO=" + lintian_fail_on_info,
+          "LINTIAN_FAIL_ON_PEDANTIC=" + lintian_fail_on_pedantic,
+          "LINTIAN_FAIL_ON_EXPERIMENTAL=" + lintian_fail_on_experimental,
+          "LINTIAN_FAIL_ON_OVERRIDE=" + lintian_fail_on_override,
+          "LINTIAN_NO_FAIL=" + lintian_no_fail,
+          "DPKG_BUILDPACKAGE_OPTS=" + dpkg_buildpackage_opts,
+          "LINTIAN_OPTS=" + lintian_opts,
         ]
         const envOpts = envs.reduce((opts, env) => [...opts, "--env", env], [])
 
@@ -174,7 +184,7 @@ async function main() {
         ])
         core.endGroup()
 
-        if (INSTALL_DEPS) {
+        if (installDeps) {
             core.startGroup("Installing dependencies")
             await exec.exec("docker", [
                 "exec",
@@ -227,7 +237,7 @@ async function main() {
             core.endGroup()
         }
 
-        if (INSTALL_BUILD_DEPS) {
+        if (installBuildDeps) {
             core.startGroup("Installing package build dependencies")
             await exec.exec("docker", [
                 "exec",
@@ -241,7 +251,7 @@ async function main() {
             core.endGroup()
         }
 
-        if (BUILD) {
+        if (build) {
             core.startGroup("Building Debian package")
             await exec.exec("docker", [
                 "exec",
@@ -251,7 +261,7 @@ async function main() {
             core.endGroup()
         }
 
-        if (CHECK) {
+        if (check) {
             core.startGroup("Checking packages")
             await exec.exec("docker", [
                 "exec",
@@ -261,7 +271,7 @@ async function main() {
             core.endGroup()
         }
 
-        if (SIGNING_KEY) {
+        if (signingKey) {
             core.startGroup("Signing packages")
             await exec.exec("docker", [
                 "exec",

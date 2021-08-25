@@ -59,7 +59,22 @@ if [[ -n "${LINTIAN_DONT_CHECK_PARTS}" ]]; then
   LINTIAN_OPTS="${LINTIAN_OPTS} --dont-check-part ${LINTIAN_DONT_CHECK_PARTS}"
 fi
 
-if [[ -n "${LINTIAN_TAGS_TO_SUPPRESS}" ]]; then
+IFS="," tagsArr=(${LINTIAN_TAGS_TO_SUPPRESS})
+
+if [[ "${LINTIAN_CHECK_CHANGELOG_SPELLING}" -eq 1 ]]; then
+  tagsArr+=("spelling-error-in-changelog")
+fi
+
+if [[ "${LINTIAN_CHECK_ITP_BUG}" -eq 0 ]]; then
+  tagsArr+=("initial-upload-closes-no-bugs")
+fi
+
+if [[ "${LINTIAN_CHECK_WATCH_FILE}" -eq 0 ]]; then
+  tagsArr+=("debian-watch-file-is-missing")
+fi
+
+if [[ ${#tagsArr[@]} -gt 0 ]]; then
+  IFS="," eval 'LINTIAN_TAGS_TO_SUPPRESS="${tagsArr[*]}"'
   LINTIAN_OPTS="${LINTIAN_OPTS} --suppress-tags ${LINTIAN_TAGS_TO_SUPPRESS}"
 fi
 
