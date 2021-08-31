@@ -25,112 +25,124 @@ inputs:
     required: false
     default: ''
   # Stages
-  DEBUG:
+  debug:
     description: "Display debug information while building"
     required: false
     default: '0'
-  INSTALL_DEPS:
+  install_deps:
     description: "Install dependencies"
     required: false
     default: '1'
-  INSTALL_BUILD_DEPS:
+  install_build_deps:
     description: "Install package build dependencies"
     required: false
     default: '1'
-  BUILD:
+  build:
     description: "If 'true', builds the package"
     required: false
     default: '1'
-  CHECK:
+  check:
     description: "If 'true', checks the built package with lintian"
     required: false
     default: '1'
   # Build configuration
-  SIGNING_KEY:
+  signing_key:
     description: "Armored GPG key to use to sign packages"
     required: false
     default: ''
-  SIGNING_PASSPHRASE:
+  signing_passphrase:
     description: "GPG passphrase to use to sign packages"
     required: false
     default: ''
-  DPKG_BUILDPACKAGE_INCLUDE_DEBUG_PACKAGE:
+  dpkg_buildpackage_include_debug_package:
     description: ""
     required: false
     default: '0'
-  DPKG_BUILDPACKAGE_HARDEN_ALL:
+  dpkg_buildpackage_harden_all:
     description: ""
     required: false
     default: '1'
-  DPKG_BUILDPACKAGE_FORCE_INCLUDE_SOURCE:
+  dpkg_buildpackage_force_include_source:
     description: ""
     required: false
     default: '1'
-  DPKG_BUILDPACKAGE_CHECK_BUILDDEPS:
+  dpkg_buildpackage_check_builddeps:
     description: ""
     required: false
     default: '0'
-  DPKG_BUILDPACKAGE_POST_CLEAN:
+  dpkg_buildpackage_post_clean:
     description: ""
     required: false
     default: '0'
   # Quality check configuration - comma-separated lists
-  LINTIAN_DONT_CHECK_PARTS:
+  lintian_dont_check_parts:
     description: ""
     required: false
     default: 'nmu'
-  LINTIAN_TAGS_TO_SUPPRESS:
+  lintian_tags_to_suppress:
     description: ""
     required: false
     default: 'initial-upload-closes-no-bugs,debian-watch-file-is-missing'
+  lintian_check_changelog_spelling:
+    description: "Suppress 'spelling-error-in-changelog' tag if true"
+    required: false
+    default: true
+  lintian_check_itp_bug:
+    description: "Suppress 'initial-upload-closes-no-bugs' tag if false"
+    required: false
+    default: false
+  lintian_check_watch_file:
+    description: "Suppress 'debian-watch-file-is-missing' tag if false"
+    required: false
+    default: false
   # Quality check configuration - boolean
-  LINTIAN_DISPLAY_INFO:
+  lintian_display_info:
     description: ""
     required: false
     default: '1'
-  LINTIAN_SHOW_OVERRIDES:
+  lintian_show_overrides:
     description: ""
     required: false
     default: '1'
-  LINTIAN_TAG_DISPLAY_LIMIT:
+  lintian_tag_display_limit:
     description: ""
     required: false
     default: '0'
   # LINTIAN_NO_FAIL overrides all others
-  LINTIAN_FAIL_ON_ERROR:
+  lintian_fail_on_error:
     description: ""
     required: false
     default: '1'
-  LINTIAN_FAIL_ON_WARNING:
+  lintian_fail_on_warning:
     description: ""
     required: false
     default: '1'
-  LINTIAN_FAIL_ON_INFO:
+  lintian_fail_on_info:
     description: ""
     required: false
     default: '0'
-  LINTIAN_FAIL_ON_PEDANTIC:
+  lintian_fail_on_pedantic:
     description: ""
     required: false
     default: '0'
-  LINTIAN_FAIL_ON_EXPERIMENTAL:
+  lintian_fail_on_experimental:
     description: ""
     required: false
     default: '0'
-  LINTIAN_FAIL_ON_OVERRIDE:
+  lintian_fail_on_override:
     description: ""
     required: false
     default: '0'
-  LINTIAN_NO_FAIL:
+  lintian_no_fail:
     description: ""
     required: false
     default: '0'
   # Additional options
-  DPKG_BUILDPACKAGE_OPTS:
+  dpkg_buildpackage_opts:
     description: ""
     required: false
     default: ''
-  LINTIAN_OPTS:
+  lintian_opts:
     description: ""
     required: false
     default: ''
