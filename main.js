@@ -46,7 +46,7 @@ async function main() {
         const DPKG_BUILDPACKAGE_POST_CLEAN = core.getInput("DPKG_BUILDPACKAGE_POST_CLEAN") || "0"
         // Quality check configuration - comma-separated lists
         const LINTIAN_DONT_CHECK_PARTS = core.getInput("LINTIAN_DONT_CHECK_PARTS") || "nmu"
-        const LINTIAN_TAGS_TO_SUPPRESS = core.getInput("LINTIAN_TAGS_TO_SUPPRESS") || "initial-upload-closes-no-bugs,debian-watch-file-is-missing"
+        const LINTIAN_TAGS_TO_SUPPRESS = core.getInput("LINTIAN_TAGS_TO_SUPPRESS") || "odd-historical-debian-changelog-version,initial-upload-closes-no-bugs,debian-watch-file-is-missing"
         // Quality check configuration - boolean
         const LINTIAN_DISPLAY_INFO = core.getInput("LINTIAN_DISPLAY_INFO") || "1"
         const LINTIAN_SHOW_OVERRIDES = core.getInput("LINTIAN_SHOW_OVERRIDES") || "1"
