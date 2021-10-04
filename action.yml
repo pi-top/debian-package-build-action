@@ -82,7 +82,7 @@ inputs:
   LINTIAN_TAGS_TO_SUPPRESS:
     description: ""
     required: false
-    default: 'odd-historical-debian-changelog-version,initial-upload-closes-no-bugs,debian-watch-file-is-missing'
+    default: 'odd-historical-debian-changelog-version,initial-upload-closes-no-bugs,debian-watch-file-is-missing,spelling-error-in-changelog'
   # Quality check configuration - boolean
   LINTIAN_DISPLAY_INFO:
     description: ""
