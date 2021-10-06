@@ -48,7 +48,7 @@ ENV DPKG_BUILDPACKAGE_OPTS=""
 # lintian configuration
 # Comma-separated
 ENV LINTIAN_DONT_CHECK_PARTS="nmu"
-ENV LINTIAN_TAGS_TO_SUPPRESS="odd-historical-debian-changelog-version,initial-upload-closes-no-bugs,debian-watch-file-is-missing,spelling-error-in-changelog"
+ENV LINTIAN_TAGS_TO_SUPPRESS="odd-historical-debian-changelog-version,initial-upload-closes-no-bugs,debian-watch-file-is-missing,spelling-error-in-changelog,debian-changelog-line-too-long"
 # Boolean
 ENV LINTIAN_DISPLAY_INFO=1
 ENV LINTIAN_SHOW_OVERRIDES=1
