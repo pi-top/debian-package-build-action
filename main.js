@@ -218,6 +218,7 @@ async function main() {
                 "--no-install-recommends",
                 ...backportsOpts,
                 "debhelper",
+                "debsigs",
                 "devscripts",
                 "dpkg-dev",
                 "fakeroot",
