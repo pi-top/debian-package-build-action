@@ -33,7 +33,7 @@ main() {
   debug_echo "Key ID: ${SIGNING_KEY_FINGERPRINT}"
 
   debsign -p${NO_TTY_GPG_COMMAND} -k${SIGNING_KEY_FINGERPRINT} /build/*.changes
-  debsigs --sign=origin --default-key=${SIGNING_KEY_FINGERPRINT} -v /build/*.deb
+  debsigs --sign=origin -k ${SIGNING_KEY_FINGERPRINT} -v /build/*.deb
 }
 
 main
