@@ -30,12 +30,13 @@ main() {
   fi
 
   debug_echo "Key ID: ${SIGNING_KEY_FINGERPRINT}"
+  GPG_OPTIONS="--no-tty -v --pinentry-mode loopback --batch --passphrase='$SIGNING_PASSPHRASE'"
 
   debug_echo "Signing .changes file"
-  dpkg-sig --sign builder --sign-changes full -k ${SIGNING_KEY_FINGERPRINT} /build/*.changes
+  dpkg-sig --sign builder --sign-changes full -k ${SIGNING_KEY_FINGERPRINT} --gpg-options ${GPG_OPTIONS} /build/*.changes
 
   debug_echo "Signing .deb files"
-  dpkg-sig --sign builder -k ${SIGNING_KEY_FINGERPRINT} -v /build/*.deb
+  dpkg-sig --sign builder -k "${SIGNING_KEY_FINGERPRINT}" -v --gpg-options ${GPG_OPTIONS} /build/*.deb
 }
 
 main
