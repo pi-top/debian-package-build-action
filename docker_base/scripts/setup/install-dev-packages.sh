@@ -15,7 +15,7 @@ debug_echo() {
   fi
 }
 
-dev_packages=("debhelper" "devscripts" "dpkg-dev" "fakeroot" "lintian" "sudo")
+dev_packages=("debhelper" "devscripts" "dpkg-dev" "dpkg-sig" "fakeroot" "lintian" "sudo")
 
 apt_get_install_opts="-y install --no-install-recommends"
 
