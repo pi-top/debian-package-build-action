@@ -220,7 +220,6 @@ async function main() {
                 "debhelper",
                 "devscripts",
                 "dpkg-dev",
-                "dpkg-sig",
                 "fakeroot",
                 "lintian",
                 "sudo"
