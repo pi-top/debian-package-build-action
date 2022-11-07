@@ -100,13 +100,6 @@ async function main() {
         if (targetArchitecture !== "amd64") {
             core.startGroup("Package requires emulation - starting tonistiigi/binfmt")
 
-            const platform_deb_to_docker = {
-                "armhf": "linux/arm/v7",
-                "arm64": "linux/arm64",
-            }
-
-            platform = platform_deb_to_docker[targetArchitecture]
-
             await exec.exec("docker", [
                 "run",
                 "--rm",
@@ -115,6 +108,14 @@ async function main() {
                 "--install",
                 "all",
             ])
+
+            const platform_deb_to_docker = {
+                "armhf": "linux/arm/v7",
+                "arm64": "linux/arm64",
+            }
+
+            platform = platform_deb_to_docker[targetArchitecture]
+
             core.endGroup()
         }
 
