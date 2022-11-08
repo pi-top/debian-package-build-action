@@ -24,7 +24,15 @@ async function main() {
         const dockerImage = core.getInput("docker_image") || "debian:stable"
         const sourceRelativeDirectory = core.getInput("source_directory")
         const buildRelativeDirectory = core.getInput("build_directory") || "/tmp/artifacts/bin"
+
         const targetArchitecture = core.getInput("target_architecture") || "amd64"
+        if (targetArchitecture == "armhf") {
+            const dockerArchitecture == "arm/v7"
+        } else {
+            const dockerArchitecture == targetArchitecture
+        }
+
+        const dockerPlatform = "linux/" + dockerArchitecture
 
         const workspaceDirectory = process.cwd()
         const sourceDirectory = path.join(workspaceDirectory, sourceRelativeDirectory)
@@ -68,7 +76,7 @@ async function main() {
             dockerImage: dockerImage,
             sourceDirectory: sourceDirectory,
             buildDirectory: buildDirectory,
-            targetArchitecture: targetArchitecture,
+            dockerPlatform: dockerPlatform,
             DEBUG: DEBUG,
             INSTALL_BUILD_DEPS: INSTALL_BUILD_DEPS,
             BUILD: BUILD,
@@ -96,7 +104,6 @@ async function main() {
         console.log(details)
         core.endGroup()
 
-        let platform = "linux/amd64";
         if (targetArchitecture !== "amd64") {
             core.startGroup("Package requires emulation - starting tonistiigi/binfmt")
 
@@ -108,13 +115,6 @@ async function main() {
                 "--install",
                 "all",
             ])
-
-            const platform_deb_to_docker = {
-                "armhf": "linux/arm/v7",
-                "arm64": "linux/arm64",
-            }
-
-            platform = platform_deb_to_docker[targetArchitecture]
 
             core.endGroup()
         }
@@ -160,7 +160,7 @@ async function main() {
             "--volume", buildDirectory + ":/build",
             "--tty",
             ...envOpts,
-            "--platform", platform,
+            "--platform", dockerPlatform,
             dockerImage,
             "sleep", "inf"
         ])
