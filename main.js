@@ -24,7 +24,14 @@ async function main() {
         const dockerImage = core.getInput("docker_image") || "debian:stable"
         const sourceRelativeDirectory = core.getInput("source_directory")
         const buildRelativeDirectory = core.getInput("build_directory") || "/tmp/artifacts/bin"
+
         const targetArchitecture = core.getInput("target_architecture") || "amd64"
+        let dockerArchitecture = targetArchitecture
+        if (targetArchitecture == "armhf") {
+            dockerArchitecture == "arm/v7"
+        }
+
+        const dockerPlatform = "linux/" + dockerArchitecture
 
         const workspaceDirectory = process.cwd()
         const sourceDirectory = path.join(workspaceDirectory, sourceRelativeDirectory)
@@ -68,7 +75,7 @@ async function main() {
             dockerImage: dockerImage,
             sourceDirectory: sourceDirectory,
             buildDirectory: buildDirectory,
-            targetArchitecture: targetArchitecture,
+            dockerPlatform: dockerPlatform,
             DEBUG: DEBUG,
             INSTALL_BUILD_DEPS: INSTALL_BUILD_DEPS,
             BUILD: BUILD,
@@ -96,10 +103,9 @@ async function main() {
         console.log(details)
         core.endGroup()
 
-        let platform = "linux/amd64";
         if (targetArchitecture !== "amd64") {
             core.startGroup("Package requires emulation - starting tonistiigi/binfmt")
-            platform = "linux/arm/v7";
+
             await exec.exec("docker", [
                 "run",
                 "--rm",
@@ -108,6 +114,7 @@ async function main() {
                 "--install",
                 "all",
             ])
+
             core.endGroup()
         }
 
@@ -152,7 +159,7 @@ async function main() {
             "--volume", buildDirectory + ":/build",
             "--tty",
             ...envOpts,
-            "--platform", platform,
+            "--platform", dockerPlatform,
             dockerImage,
             "sleep", "inf"
         ])
