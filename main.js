@@ -26,10 +26,9 @@ async function main() {
         const buildRelativeDirectory = core.getInput("build_directory") || "/tmp/artifacts/bin"
 
         const targetArchitecture = core.getInput("target_architecture") || "amd64"
+        let dockerArchitecture == targetArchitecture
         if (targetArchitecture == "armhf") {
-            const dockerArchitecture == "arm/v7"
-        } else {
-            const dockerArchitecture == targetArchitecture
+            dockerArchitecture == "arm/v7"
         }
 
         const dockerPlatform = "linux/" + dockerArchitecture
