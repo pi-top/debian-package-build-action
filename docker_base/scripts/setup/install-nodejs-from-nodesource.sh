@@ -9,7 +9,7 @@ IFS=$'\n\t'
 
 set -x
 
-NODEREPO="node_24.x"
+NODEREPO="node_22.x"
 
 echo "Adding NodeJS repo..."
 mkdir -p /etc/apt/keyrings
