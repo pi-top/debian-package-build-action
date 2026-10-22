@@ -7,7 +7,7 @@ on:
       - ".github/workflows/docker-build.yml"
 
 env:
-  BASE_IMAGE_FOR_LATEST: "bullseye"
+  BASE_IMAGE_FOR_LATEST: "bookworm"
   IMAGE_NAME: "pitop/pi-top-os-deb-build"
   PLATFORMS: "linux/amd64,linux/arm64,linux/arm/v7"
 
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        base_image: ['buster-backports', 'bullseye', 'bookworm']
+        base_image: ['bookworm']
     steps:
       - name: Checkout code
         uses: actions/checkout@v2.2.0
