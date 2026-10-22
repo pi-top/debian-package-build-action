@@ -9,17 +9,18 @@ IFS=$'\n\t'
 
 set -x
 
-NODEREPO="node_16.x"
+NODEREPO="node_22.x"
 
 echo "Adding NodeJS repo..."
-curl -fsSLk https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+mkdir -p /etc/apt/keyrings
+curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
 
-echo "deb https://deb.nodesource.com/${NODEREPO} $(lsb_release -cs) main" >/etc/apt/sources.list.d/nodesource.list
+echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/${NODEREPO} nodistro main" >/etc/apt/sources.list.d/nodesource.list
 
 echo "Updating package list..."
 apt-get update
 
-echo "Installing NodeJS, without unnecessary recommended packages..."
+echo "Installing NodeJS..."
 apt-get install -y nodejs
 
 echo "Deleting cached files we don't need anymore..."

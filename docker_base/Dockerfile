@@ -1,5 +1,5 @@
-ARG DEBIAN_BASE_IMAGE=bullseye
-# Supported: 'buster-backports', 'bullseye' and onwards
+ARG DEBIAN_BASE_IMAGE=bookworm
+# Supported: 'bookworm' and onwards
 
 FROM debian:$DEBIAN_BASE_IMAGE
 
