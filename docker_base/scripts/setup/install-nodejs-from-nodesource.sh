@@ -21,7 +21,7 @@ echo "Updating package list..."
 apt-get update
 
 echo "Installing NodeJS, without unnecessary recommended packages..."
-apt-get install -y nodejs
+apt-get install -y --no-install-recommends nodejs
 
 echo "Deleting cached files we don't need anymore..."
 apt-get clean
