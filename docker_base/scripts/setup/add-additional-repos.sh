@@ -25,6 +25,14 @@ echo "Adding Raspberry Pi's repo..."
 curl -fsSL http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | apt-key add -
 echo "deb [arch=armhf,amd64,arm64] http://archive.raspberrypi.org/debian/ $(lsb_release -cs) main" >/etc/apt/sources.list.d/raspi.list
 
+# Debian wins where both archives ship a package; the Raspberry Pi archive is
+# a fallback for packages Debian does not have.
+cat >/etc/apt/preferences.d/raspberrypi <<'PREF'
+Package: *
+Pin: origin "archive.raspberrypi.org"
+Pin-Priority: 100
+PREF
+
 echo "Updating package list..."
 apt-get update
 
