@@ -14,12 +14,11 @@ debug_echo() {
 }
 
 source_package="$(cd /src && dpkg-parsechangelog --show-field Source)"
-# Trim repack suffix and revision number
-upstream_version="$(cd /src && dpkg-parsechangelog --show-field Version | cut -d'-' -f1 | cut -d'+' -f1)"
-# Trim epoch version number
-if [[ "${upstream_version}" == *":"* ]]; then
-  upstream_version="$(echo ${upstream_version} | cut -d':' -f2)"
-fi
+# Upstream version: drop the epoch (to the first ':') and the revision (from the last '-').
+# '+' suffixes (+git, +dfsg) are part of it and must stay, or dpkg-source can't find the tarball.
+version="$(cd /src && dpkg-parsechangelog --show-field Version)"
+upstream_version="${version#*:}"
+upstream_version="${upstream_version%-*}"
 
 tmp_dir_root=$(mktemp -d)
 
